@@ -1,36 +1,21 @@
 public class Coccinelle {
 
-    //###Attributs##
-    int aTailleColonne=0;
-    int aTailleLigne=0;
-    int[][] aTab=null;
-
-    public static Tableau(final int pTailleColonne, final int pTailleLigne){
-        aTailleColonne=pTailleColonne+1;
-        aTailleLigne=pTailleLigne+1;
-        int[][] aTab=new int[pTailleLigne][pTailleColonne];
-    }
-
-    public static void afficheTab() {
-        for(int j=aTailleColonne-1 ; j>=0 ; j--) {
-            for(int i=0 ; i<aTailleLigne ; i++) {
-                System.out.print(" "+aTab[i][j]);
+    public static void afficheTab(int[][] tab) {
+        for(int j=tab[0].length-1 ; j>=0 ; j--) {
+            for(int i=0 ; i<tab.length ; i++) {
+                System.out.print(" "+tab[i][j]);
             }
             System.out.println("");
         }
     }
 
-    Tableau aGrille = new Tableau(7,4);
-        aGrille.aTab={{2,4,3,9,6},
-                    {1,10,15,1,2},
-                    {2,4,11,26,66},
-                    {36,34,1,13,30},
-                    {46,2,8,7,15},
-                    {89,27,10,12,3},
-                    {1,72,3,6,6},
-                    {3,1,2,4,5}};
-
     public static void main(String[] args){
-        aGrille.afficheTab();
+        int[][] aGrille = {{2,1,2,36,46,89,1,3},
+                            {4,10,4,34,2,27,72,1},
+                            {3,15,11,1,8,10,3,2},
+                            {9,1,26,13,7,12,6,4},
+                            {6,2,66,30,15,3,6,5}};
+
+        afficheTab(aGrille);
     }
 }
