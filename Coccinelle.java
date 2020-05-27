@@ -91,7 +91,8 @@ public class Coccinelle {
                     Mno=M[l-1][c+1]+no(l-1,c+1,pGrille);
                 }
 
-                Mn=M[l-1][c]+n(l-1,c,pGrille); }
+                Mn=M[l-1][c]+n(l-1,c,pGrille);
+                }
 
                 if(c-1 < 0) { Mne = aInfiniNeg; }
                 else {
