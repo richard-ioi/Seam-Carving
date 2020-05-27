@@ -24,6 +24,7 @@ public class Coccinelle {
         System.out.println("\nGrille representant les pucerons :");
         afficheTab(aGrille);
         calculerM(aGrille);
+        System.out.println("\nTableau chemin");
         afficheTab(M);
         /*
         int[][] aGrilleChemin = calculChemin(aGrille);
@@ -52,7 +53,7 @@ public class Coccinelle {
 
     //Coûts des déplacements Nord-Ouest
     public static int no(int pL, int pC, int[][] pGrille){
-        if (pC-1<=0){
+        if (pC-1<0){
             return aInfiniNeg;
         }else{
             return pGrille[pL+1][pC-1];
@@ -75,16 +76,17 @@ public class Coccinelle {
 
     public static void calculerM(int[][] pGrille){
         for (int i=0; i<aC;i++){
-            M[0][i]=pGrille[i][0];
+            M[0][i]=pGrille[0][i];
         }
+
+        int Mno=0;
+        int Mn=0;
+        int Mne=0;
 
         for (int l=1;l<aL;l++){
             for (int c=0;c<aC;c++){
-                int Mno=0;
-                int Mn=0;
-                int Mne=0;
-                
-                if(c+1>aC) {
+
+                if(c+1>=aC) {
                     Mno = aInfiniNeg;
                 }
                 else {
@@ -92,9 +94,10 @@ public class Coccinelle {
                 }
 
                 Mn=M[l-1][c]+n(l-1,c,pGrille);
-                }
 
-                if(c-1 < 0) { Mne = aInfiniNeg; }
+                if(c-1 < 0) {
+                    Mne = aInfiniNeg;
+                }
                 else {
                     Mne=M[l-1][c-1]+ne(l-1,c-1,pGrille);
                 }
