@@ -80,9 +80,24 @@ public class Coccinelle {
 
         for (int l=1;l<aL;l++){
             for (int c=0;c<aC;c++){
-                int Mno=M[l-1][c+1]+no(l-1,c+1,pGrille);
-                int Mn=M[l-1][c]+n(l-1,c,pGrille);
-                int Mne=M[l-1][c-1]+ne(l-1,c-1,pGrille);
+                int Mno=0;
+                int Mn=0;
+                int Mne=0;
+                
+                if(c+1>aC) {
+                    Mno = aInfiniNeg;
+                }
+                else {
+                    Mno=M[l-1][c+1]+no(l-1,c+1,pGrille);
+                }
+
+                Mn=M[l-1][c]+n(l-1,c,pGrille); }
+
+                if(c-1 < 0) { Mne = aInfiniNeg; }
+                else {
+                    Mne=M[l-1][c-1]+ne(l-1,c-1,pGrille);
+                }
+
                 M[l][c]= (int)Math.max(Mno, (int)Math.max(Mn,Mne));
             }
         }
