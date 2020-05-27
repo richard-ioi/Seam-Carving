@@ -6,7 +6,6 @@ public class Coccinelle {
     public static final int aL=7+1;
     public static final int aC=4+1;
     public static int[][] M = new int[aL][aC];
-    //public static int[][] aGrille = new int[aL][aC];
     
     // ###FONCTION PRINCIPALE###
     public static void main(String[] args){
@@ -18,22 +17,16 @@ public class Coccinelle {
                             {89,27,10,12,3},
                             {1,72,3,6,6},
                             {3,1,2,4,5} };
-        
-        //aGrille=aGrille2;
             
         System.out.println("\nGrille representant les pucerons :");
         afficheTab(aGrille);
         calculerM(aGrille);
         System.out.println("\nTableau chemin");
         afficheTab(M);
-        /*
-        int[][] aGrilleChemin = calculChemin(aGrille);
-        System.out.println("\nTableau M[L][C] de terme general M[l][c] = m(l,c) representant le chemin de la coccinelle :");
-        afficheTab(aGrilleChemin);
-
-        int aMaxPucerons = max(aGrilleChemin);
-        System.out.println("La coccinelle a mange "+aMaxPucerons+" Pucerons");
-        */
+        System.out.println();
+        System.out.println("Le chemin est le suivant:");
+        accm(aL,aC,aGrille);
+        System.out.println();
     }
 
     //###AUTRES FONCTIONS###
@@ -105,6 +98,37 @@ public class Coccinelle {
                 M[l][c]= (int)Math.max(Mno, (int)Math.max(Mn,Mne));
             }
         }
+    }
+
+    static void accm(int pL, int pC, int[][]pGrille){
+        if ((pL==0) && (pC==0)){
+            System.out.print("(0,0)");
+            return;
+        }
+        int Mno=aInfiniNeg;
+        int Mn=aInfiniNeg;
+        int Mne=aInfiniNeg;
+
+        if((pL-1>=0)){
+            Mn=M[pL-1][pC]+n(pL-1,pC,pGrille);
+        }
+        if((pL-1>=0) && (pC-1>=0)){
+            Mne=M[pL-1][pC-1]+ne(pL-1,pC-1,pGrille);
+        }
+        if((pL-1>=0) && (pC+1<=aC)){
+            Mno=M[pL-1][pC+1]+no(pL-1,pC+1,pGrille);
+        }
+
+        if(M[pL][pC] == Mn){
+            accm(pL-1,pC,pGrille);
+        } 
+        else if (M[pL][pC]==Mne){
+            accm(pL-1,pC-1,pGrille);
+        }
+        else if (M[pL][pC]==Mno){
+            accm(pL-1,pC+1,pGrille);
+        }
+        System.out.printf("(%d,%d)",pL,pC);
     }
 
 }
