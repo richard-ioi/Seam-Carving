@@ -10,11 +10,20 @@ public class Coccinelle {
     
     // ###FONCTION PRINCIPALE###
     public static void main(String[] args){
-        int[][] aGrille = { {2,1,2,36,46,89,1,3},
+        int[][] aGrille = { {2,4,3,9,6},
+                            {1,10,15,1,2},
+                            {2,4,11,26,66},
+                            {36,34,1,13,30},
+                            {46,2,8,7,15},
+                            {89,27,10,12,3},
+                            {1,72,3,6,6},
+                            {3,1,2,4,5} };
+            
+                            /*{2,1,2,36,46,89,1,3},
                             {4,10,4,34,2,27,72,1},
                             {3,15,11,1,8,10,3,2},
                             {9,1,26,13,7,12,6,4},
-                            {6,2,66,30,15,3,6,5} };
+                            {6,2,66,30,15,3,6,5} };*/
         System.out.println("\nGrille representant les pucerons :");
         afficheTab(aGrille);
         /*
@@ -30,8 +39,8 @@ public class Coccinelle {
     //###AUTRES FONCTIONS###
 
     public static void afficheTab(int[][] tab) {
-        for(int j=tab[0].length-1 ; j>=0 ; j--) {
-            for(int i=0 ; i<tab.length ; i++) {
+        for(int i=tab.length-1 ; i>=0 ; i--) {
+            for(int j=0 ; j<tab[0].length ; j++) {
                 if(tab[i][j] < 100)
                     System.out.print(" ");
                 if(tab[i][j] < 10)
