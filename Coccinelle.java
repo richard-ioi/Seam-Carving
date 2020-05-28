@@ -25,7 +25,7 @@ public class Coccinelle {
         afficheTab(M);
         System.out.println();
         System.out.println("Le chemin est le suivant:");
-        accm(aL,aC,aGrille);
+        accm(aL-1,aC-1,aGrille);
         System.out.println();
     }
 
@@ -115,7 +115,7 @@ public class Coccinelle {
         if((pL-1>=0) && (pC-1>=0)){
             Mne=M[pL-1][pC-1]+ne(pL-1,pC-1,pGrille);
         }
-        if((pL-1>=0) && (pC+1<=aC)){
+        if((pL-1>=0) && (pC+1<aC)){
             Mno=M[pL-1][pC+1]+no(pL-1,pC+1,pGrille);
         }
 
