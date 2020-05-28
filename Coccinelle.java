@@ -25,18 +25,16 @@ public class Coccinelle {
                             {1,72,3,6,6},
                             {3,1,2,4,5} };
             
-        System.out.println("\nGrille representant les pucerons :");
+        System.out.println("\nGrille représentant les pucerons au départ :");
         afficheTab(aGrille);
         calculerM(aGrille);
-        System.out.println("\nTableau chemin");
+        System.out.println("\nTableau M[L][C] de terme général M[l][c] = m(l,c) représentant le nb max de pucerons mangés :");
         afficheTab(M);
         plusGrandNombrePuceron();
-        System.out.println();
-        System.out.println("La coccinelle a mangé "+aPlusGrandNombre+" pucerons");
-        System.out.print("Le chemin est le suivant:");
+        System.out.println("\nLa coccinelle a mangé "+aPlusGrandNombre+" pucerons");
+        System.out.println("Le chemin suivit par la coccinelle est le suivant :");
         accm(aLplusGrand,aCplusGrand,aGrille);
-        System.out.println();
-        System.out.println("Case d'atterrissage = ("+aLAterrissage+","+aCAterrissage+").");
+        System.out.println("\nCase d'atterrissage = ("+aLAterrissage+","+aCAterrissage+").");
         System.out.println("Case de l'interview = ("+aLInterview+","+aCInterview+").");
     }
 
