@@ -6,13 +6,13 @@ public class Coccinelle {
     //###ATTRIBUTS###
     //
 
-    public static final int aInfiniNeg = -Integer.MAX_VALUE; // Constante - l'infini qui nous sert plus tard, si jamais la coccinelle veut sortir 
+    public static final int aInfiniNeg = -Integer.MAX_VALUE; // Constante -l'infini qui nous sert plus tard, pour que la coccinelle ne sorte pas de la grille
     public static final int aL=7+1; // Nombre de lignes de la grille
     public static final int aC=4+1; // Nombre de colonnes de la grille
-    public static int[][] M = new int[aL][aC]; // tableau de terme général m(l,c), coût de pucerons maximum.
+    public static int[][] M = new int[aL][aC]; // Tableau de terme général M[l][c] = m(l,c), nombre maximum de pucerons.
     public static int aLplusGrand=0; // Coordonnée L du tableau correspondant au terme m(l,c).
-    public static int aCplusGrand=0;// Coordonnée C du tableau correspondant au terme m(l,c).
-    public static int aPlusGrandNombre=0;// Nombre de pucerons maximum
+    public static int aCplusGrand=0; // Coordonnée C du tableau correspondant au terme m(l,c).
+    public static int aPlusGrandNombre=0; // Nombre maximum de  pucerons mangés
     public static int aLAterrissage=0; // Coordonnée L de la case atterrissage
     public static int aCAterrissage=0; // Coordonnée C de la case atterissage
     public static int aLInterview=0; // Coordonnée L de la case interview
@@ -32,17 +32,17 @@ public class Coccinelle {
         
         System.out.println("\nGrille représentant les pucerons au départ :");
         afficheTab(aGrille); // Affiche la grille dans le bon ordre
-        calculerM(aGrille); // Créée un tableau de terme général m(l,c), coût de pucerons maximum de aGrille.
+        calculerM(aGrille); // Calcule le tableau M de terme général m(l,c), nombre maximum de pucerons de aGrille.
         System.out.println("\nTableau M[L][C] de terme général M[l][c] = m(l,c) représentant le nb max de pucerons mangés :");
         afficheTab(M); // Affiche le tableau M dans le bon ordre
         plusGrandNombrePuceron(); // Détermine la case sur laquelle on atteint le plus grand nombre de pucerons dévorés.
         System.out.println("\nLa coccinelle a mangé "+aPlusGrandNombre+" pucerons");
         System.out.println("Le chemin suivit par la coccinelle est le suivant :");
-        accm(aLplusGrand,aCplusGrand,aGrille); // Détermine le chemin que la coccinelle atteint pour manger le plus grand nombre de pucerons
+        accm(aLplusGrand,aCplusGrand,aGrille); // Détermine le chemin que la coccinelle emprunte pour manger le plus grand nombre de pucerons
                                                // En mettant en paramètre les coordonnées de la case sur laquelle on atteint le plus grand nombre de pucerons dévorés
         System.out.println("\nCase d'atterrissage = ("+aLAterrissage+","+aCAterrissage+").");
         System.out.println("Case de l'interview = ("+aLInterview+","+aCInterview+").");
-        System.out.println();
+        System.out.println("");
     }
 
     //###AUTRES FONCTIONS###
@@ -94,7 +94,7 @@ public class Coccinelle {
     }
 
     /*
-    Fonction qui calcule le côut de pucerons maximum atteint pour chaque case
+    Fonction qui calcule le nombre maximum de pucerons atteints pour chaque case
     */
     public static void calculerM(int[][] pGrille){
         for (int i=0; i<aC;i++){
