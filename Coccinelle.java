@@ -1,10 +1,19 @@
+//Richard FOUQUOIRE et Jérémy LAVEILLE - 28/05/2020
+// ESIEE E2 groupe 10
+
 public class Coccinelle {
 /*
-
+Cet algorithme correspond à l'exercice n°1 du projet de l'unité d'algorithmique du 2e semestre.
+Il permet, à partir d'une grille de valeurs entières, de déterminer le meilleur chemin à emprumter pour atteindre la plus haute valeur.
+Dans notre cas cela correspond à une coccinelle qui doit manger un nombre maximum de pucerons, répartis sur la grille, en suivant ce chemin.
+Le programme utilise différentes fonctions dans le but :
+    -> D'afficher la grille de départ,
+    -> De calculer puis d'afficher une nouvelle grille correspondant, sur chaque case, au nb maximal de pucerons mangés jusqu'ici,
+    -> D'indiquer le nombre maximal de pucerons qu'a mangé la coccinelle à la fin de son parcourt,
+    -> Et enfin d'afficher le chemin qu'a suivit la coccinelle pour manger ce nb maximal de pucerons, ainsi que les cases de départ et d'arrivée.
 */
 
     //###ATTRIBUTS###
-    //
 
     public static final int aInfiniNeg = -Integer.MAX_VALUE; // Constante -l'infini qui nous sert plus tard, pour que la coccinelle ne sorte pas de la grille
     public static final int aL=7+1; // Nombre de lignes de la grille
