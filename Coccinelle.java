@@ -6,6 +6,13 @@ public class Coccinelle {
     public static final int aL=7+1;
     public static final int aC=4+1;
     public static int[][] M = new int[aL][aC];
+    public static int aLplusGrand=0;
+    public static int aCplusGrand=0;
+    public static int aPlusGrandNombre=0;
+    public static int aLAterrissage=0;
+    public static int aCAterrissage=0;
+    public static int aLInterview=0;
+    public static int aCInterview=0;
     
     // ###FONCTION PRINCIPALE###
     public static void main(String[] args){
@@ -23,10 +30,14 @@ public class Coccinelle {
         calculerM(aGrille);
         System.out.println("\nTableau chemin");
         afficheTab(M);
+        plusGrandNombrePuceron();
         System.out.println();
-        System.out.println("Le chemin est le suivant:");
-        accm(aL-1,aC-1,aGrille);
+        System.out.println("La coccinelle a mangé "+aPlusGrandNombre+" pucerons");
+        System.out.print("Le chemin est le suivant:");
+        accm(aLplusGrand,aCplusGrand,aGrille);
         System.out.println();
+        System.out.println("Case d'atterrissage = ("+aLAterrissage+","+aCAterrissage+").");
+        System.out.println("Case de l'interview = ("+aLInterview+","+aCInterview+").");
     }
 
     //###AUTRES FONCTIONS###
@@ -129,6 +140,25 @@ public class Coccinelle {
             accm(pL-1,pC+1,pGrille);
         }
         System.out.printf("(%d,%d)",pL,pC);
+
+        if (pL==aL-1){
+            aLInterview=pL;
+            aCInterview=pC;
+        } else if (pL==0){
+            aLAterrissage=pL;
+            aCAterrissage=pC;
+        }
     }
 
+    static void plusGrandNombrePuceron(){
+        for (int l=0; l<aL;l++){
+            for (int c=0; c<aC;c++){
+                if (M[l][c]>aPlusGrandNombre){
+                    aPlusGrandNombre=M[l][c];
+                    aLplusGrand=l;
+                    aCplusGrand=c;
+                }
+            }
+        }
+    }
 }
