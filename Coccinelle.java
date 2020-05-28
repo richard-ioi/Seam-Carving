@@ -1,22 +1,26 @@
 public class Coccinelle {
+/*
+
+*/
 
     //###ATTRIBUTS###
+    //
 
-    public static final int aInfiniNeg = -Integer.MAX_VALUE; /* constante -infinie */
-    public static final int aL=7+1;
-    public static final int aC=4+1;
-    public static int[][] M = new int[aL][aC];
-    public static int aLplusGrand=0;
-    public static int aCplusGrand=0;
-    public static int aPlusGrandNombre=0;
-    public static int aLAterrissage=0;
-    public static int aCAterrissage=0;
-    public static int aLInterview=0;
-    public static int aCInterview=0;
+    public static final int aInfiniNeg = -Integer.MAX_VALUE; // Constante - l'infini qui nous sert plus tard, si jamais la coccinelle veut sortir 
+    public static final int aL=7+1; // Nombre de lignes de la grille
+    public static final int aC=4+1; // Nombre de colonnes de la grille
+    public static int[][] M = new int[aL][aC]; // tableau de terme général m(l,c), coût de pucerons maximum.
+    public static int aLplusGrand=0; // Coordonnée L du tableau correspondant au terme m(l,c).
+    public static int aCplusGrand=0;// Coordonnée C du tableau correspondant au terme m(l,c).
+    public static int aPlusGrandNombre=0;// Nombre de pucerons maximum
+    public static int aLAterrissage=0; // Coordonnée L de la case atterrissage
+    public static int aCAterrissage=0; // Coordonnée C de la case atterissage
+    public static int aLInterview=0; // Coordonnée L de la case interview
+    public static int aCInterview=0; // Coordonnée C de la case interview
     
     // ###FONCTION PRINCIPALE###
     public static void main(String[] args){
-        int[][] aGrille = { {2,4,3,9,6},
+        int[][] aGrille = { {2,4,3,9,6}, // Grille de pucerons
                             {1,10,15,1,2},
                             {2,4,11,26,66},
                             {36,34,1,13,30},
@@ -25,21 +29,28 @@ public class Coccinelle {
                             {1,72,3,6,6},
                             {3,1,2,4,5} };
             
+        
         System.out.println("\nGrille représentant les pucerons au départ :");
-        afficheTab(aGrille);
-        calculerM(aGrille);
+        afficheTab(aGrille); // Affiche la grille dans le bon ordre
+        calculerM(aGrille); // Créée un tableau de terme général m(l,c), coût de pucerons maximum de aGrille.
         System.out.println("\nTableau M[L][C] de terme général M[l][c] = m(l,c) représentant le nb max de pucerons mangés :");
-        afficheTab(M);
-        plusGrandNombrePuceron();
+        afficheTab(M); // Affiche le tableau M dans le bon ordre
+        plusGrandNombrePuceron(); // Détermine la case sur laquelle on atteint le plus grand nombre de pucerons dévorés.
         System.out.println("\nLa coccinelle a mangé "+aPlusGrandNombre+" pucerons");
         System.out.println("Le chemin suivit par la coccinelle est le suivant :");
-        accm(aLplusGrand,aCplusGrand,aGrille);
+        accm(aLplusGrand,aCplusGrand,aGrille); // Détermine le chemin que la coccinelle atteint pour manger le plus grand nombre de pucerons
+                                               // En mettant en paramètre les coordonnées de la case sur laquelle on atteint le plus grand nombre de pucerons dévorés
         System.out.println("\nCase d'atterrissage = ("+aLAterrissage+","+aCAterrissage+").");
         System.out.println("Case de l'interview = ("+aLInterview+","+aCInterview+").");
+        System.out.println();
     }
 
     //###AUTRES FONCTIONS###
+    //
 
+    /*
+     Fonction qui affiche le tableau dans le bon ordre (Les lignes montent de bas en haut au lieu de descendre du haut vers le bas)
+    */
     public static void afficheTab(int[][] tab) {
         for(int i=tab.length-1 ; i>=0 ; i--) {
             for(int j=0 ; j<tab[0].length ; j++) {
@@ -53,7 +64,9 @@ public class Coccinelle {
         }
     }
 
-    //Coûts des déplacements Nord-Ouest
+    /*
+     Fonction qui calcule le coût des déplacements Nord-Ouest
+    */
     public static int no(int pL, int pC, int[][] pGrille){
         if (pC-1<0){
             return aInfiniNeg;
@@ -62,12 +75,16 @@ public class Coccinelle {
         }
     }
 
-    //Coûts des déplacements Nord
+    /*
+    Fonction qui calcule le coût des déplacements Nord
+    */
     public static int n(int pL, int pC, int[][] pGrille){
         return pGrille[pL+1][pC];
     }
 
-    //Coût des déplacements Nord-Est
+    /*
+    Fonction qui calcule le coût des déplacements Nord-Est
+    */
     public static int ne(int pL, int pC, int[][] pGrille){
         if (pC+1>=aC){
             return aInfiniNeg;
@@ -76,6 +93,9 @@ public class Coccinelle {
         }
     }
 
+    /*
+    Fonction qui calcule le côut de pucerons maximum atteint pour chaque case
+    */
     public static void calculerM(int[][] pGrille){
         for (int i=0; i<aC;i++){
             M[0][i]=pGrille[0][i];
@@ -109,6 +129,27 @@ public class Coccinelle {
         }
     }
 
+    /*
+    Fonction qui détermine le plus grand nombre de pucerons consommés possible et 
+    les coordonnées de la case correspondante
+    */
+    static void plusGrandNombrePuceron(){
+        for (int l=0; l<aL;l++){
+            for (int c=0; c<aC;c++){
+                if (M[l][c]>aPlusGrandNombre){
+                    aPlusGrandNombre=M[l][c];
+                    aLplusGrand=l;
+                    aCplusGrand=c;
+                }
+            }
+        }
+    }
+
+    /*
+    Fonction qui détermine le chemin parcouru par la coccinelle pour atteindre le plus grand
+    nombre de pucerons dévorés en mettant en paramètre les coordonnées de la case correspondant
+    au plus grand nombre de puces dévorées possible (grâce à la fonction plusGrandNombrePuceron()).
+    */
     static void accm(int pL, int pC, int[][]pGrille){
         if ((pL==0) && (pC==0)){
             System.out.print("(0,0)");
@@ -145,18 +186,6 @@ public class Coccinelle {
         } else if (pL==0){
             aLAterrissage=pL;
             aCAterrissage=pC;
-        }
-    }
-
-    static void plusGrandNombrePuceron(){
-        for (int l=0; l<aL;l++){
-            for (int c=0; c<aC;c++){
-                if (M[l][c]>aPlusGrandNombre){
-                    aPlusGrandNombre=M[l][c];
-                    aLplusGrand=l;
-                    aCplusGrand=c;
-                }
-            }
         }
     }
 }
