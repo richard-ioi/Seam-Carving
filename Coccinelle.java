@@ -1,4 +1,4 @@
-//Richard FOUQUOIRE et Jérémy LAVEILLE - 28/05/2020
+// Richard FOUQUOIRE et Jérémy LAVEILLE - 28/05/2020
 // ESIEE E2 groupe 10
 
 public class Coccinelle {
