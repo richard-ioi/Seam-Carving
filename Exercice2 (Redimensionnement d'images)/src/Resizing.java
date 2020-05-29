@@ -15,7 +15,7 @@ public class Resizing{
         chargerImage("images/chaton.jpg");
     }
 
-    //###AUTRES FONCTIONS##//
+    //###AUTRES FONCTIONS###//
 
     public static void chargerImage(String pFileName){
         try{
