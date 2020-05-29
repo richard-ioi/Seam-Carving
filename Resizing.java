@@ -17,7 +17,7 @@ Il permet,
 
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
-    	chargerImage("chaton.jpg");
+    	chargerImage("Images/chaton.jpg");
     }
 
 	//###AUTRES FONCTIONS##// 
