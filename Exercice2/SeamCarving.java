@@ -25,7 +25,7 @@ public class SeamCarving{
         catch (Exception e){
             System.out.println("ERREUR ! La commande a été mal introduite.");
             System.out.println("Vérifiez que vous avez bien tapé la commande comme suit :");
-            System.out.println("java nomfichier.png %NouvelleLargeur %NouvelleHauteur");
+            System.out.println("java SeamCarving nomfichier.png %NouvelleLargeur %NouvelleHauteur");
         }
     }
 
@@ -35,8 +35,8 @@ public class SeamCarving{
         try{
             aImage = ImageIO.read(new File(pFileName));
             System.out.println("L'image s'est bien chargée");
-            System.out.println("Informations de l'image:");
-            System.out.println(aImage);
+            //System.out.println("Informations de l'image:");
+            //System.out.println(aImage);
             System.out.println("Le nom de l'image est : "+aNomImage);
             System.out.println("L'image doit être réduite de "+aPourcentageHorizontal+"% en largeur et "+aPourcentageVertical+"% en hauteur");
         }
