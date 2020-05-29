@@ -2,18 +2,20 @@
 // ESIEE E2 groupe 10
 
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.applet.Applet;
+import java.awt.*;
+import java.awt.image.*;
+import java.io.*;
+import java.net.URL;
+import javax.imageio.*;
 
-public class Resizing{
+public class Resizing extends Applet{
 /*
 Cet algorithme correspond à l'exercice n°2 du projet de l'unité d'algorithmique du 2e semestre.
 Il permet, 
 */
 	//###ATTRIBUTS###//
-	public BufferedImage aImage;
+	public static BufferedImage aImage = null;
 
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
@@ -25,11 +27,13 @@ Il permet,
 	/*
 
 	*/
-    public static void chargerImage(String pFileName){
+    public void chargerImage(String pFileName){
 		try{
-			BufferedImage aImage = ImageIO.read(new File(pFileName));
+			URL url = new URL(getCodeBase(), "chaton.jpg");
+			aImage = ImageIO.read(new File(url));
+			//aImage = ImageIO.read(new File("chaton.jpg"));
 			//System.out.println(aImage);
-			System.out.println("L'image est bien chargée");
+			//System.out.println("L'image est bien chargée");
 		}
 		catch (IOException e){
 			System.out.println("L'image ne s'est pas chargée");
