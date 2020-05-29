@@ -7,6 +7,7 @@ import java.io.*;
 import javax.imageio.*;
 
 public class SeamCarving{
+
     //###ATTRIBUTS###//
     public static BufferedImage aImage = null;
     public static int aPourcentageHorizontal;
@@ -15,10 +16,17 @@ public class SeamCarving{
 
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
+        try{
         aNomImage=args[0];
         aPourcentageHorizontal = Integer.parseInt(args[1]);
         aPourcentageVertical = Integer.parseInt(args[2]);
         chargerImage("Images/"+aNomImage);
+        } 
+        catch (Exception e){
+            System.out.println("ERREUR ! La commande a été mal introduite.");
+            System.out.println("Vérifiez que vous avez bien tapé la commande comme suit :");
+            System.out.println("java nomfichier.png %NouvelleLargeur %NouvelleHauteur");
+        }
     }
 
     //###AUTRES FONCTIONS###//
