@@ -13,7 +13,7 @@ Le programme utilise différentes fonctions dans le but :
     -> Et enfin d'afficher le chemin qu'a suivit la coccinelle pour manger ce nb maximal de pucerons, ainsi que les cases de départ et d'arrivée.
 */
 
-    //###ATTRIBUTS###
+    //###ATTRIBUTS###//
 
     public static final int aInfiniNeg = -Integer.MAX_VALUE; // Constante -l'infini qui nous sert plus tard, pour que la coccinelle ne sorte pas de la grille
     public static final int aL=7+1; // Nombre de lignes de la grille
@@ -27,7 +27,7 @@ Le programme utilise différentes fonctions dans le but :
     public static int aLInterview=0; // Coordonnée L de la case interview
     public static int aCInterview=0; // Coordonnée C de la case interview
     
-    // ###FONCTION PRINCIPALE###
+    //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
         int[][] aGrille = { {2,4,3,9,6}, // Grille de pucerons
                             {1,10,15,1,2},
@@ -54,7 +54,7 @@ Le programme utilise différentes fonctions dans le but :
         System.out.println("");
     }
 
-    //###AUTRES FONCTIONS###
+    //###AUTRES FONCTIONS###//
     //
 
     /*
