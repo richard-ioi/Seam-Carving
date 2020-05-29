@@ -1,7 +1,7 @@
 // Richard FOUQUOIRE et Jérémy LAVEILLE - 29/05/2020
 // ESIEE E2 groupe 10
 
-import java.awt;
+import java.awt.*;
 import java.ImageIO;
 import java.ImageIcon;
 import java.File;
@@ -18,22 +18,20 @@ Il permet,
 
     //###ATTRIBUTS###
 
-    
+    static String aImagePath = "Images/chaton1.png";
+    static BufferedImage aMonImage = ImageIO.read(new File(aImagePath));
+    static JLabel aPicLabel = new JLabel(new ImageIcon(aMonImage));
+    static JPanel aJPanel = new JPanel();
+    static JFrame aF = new JFrame();
     
     // ###FONCTION PRINCIPALE###
     public static void main(String[] args) {
-        String imagePath = "Images/chaton1.png";
-        BufferedImage myPicture = ImageIO.read(new File(imagePath));
 
-        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+        jPanel.add(aPicLabel);
 
-        JPanel jPanel = new JPanel();
-        jPanel.add(picLabel);
-
-        JFrame f = new JFrame();
-        f.setSize(new Dimension(myPicture.getWidth(), myPicture.getHeight()));
-        f.add(jPanel);
-        f.setVisible(true);
+        aF.setSize(new Dimension(aMonImage.getWidth(), aMonImage.getHeight()));
+        aF.add(aJPanel);
+        aF.setVisible(true);
     }
 
     //###AUTRES FONCTIONS###
