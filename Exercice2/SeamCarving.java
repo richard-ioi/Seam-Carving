@@ -5,6 +5,7 @@ Il permet,
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
+import java.awt.Color;
 
 public class SeamCarving{
 
@@ -19,8 +20,11 @@ public class SeamCarving{
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
         Initialisation(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
-        //System.out.println("Valeur RGB Du tableau en 0, 0:"+getRGBTab(aImage)[0][0]);
-        printRGBTab(getRGBTab(aImage));
+        System.out.println("R:"+getRGBPixel("r",getColorTab(aImage)[40][40]));
+        System.out.println("G:"+getRGBPixel("g",getColorTab(aImage)[40][40]));
+        System.out.println("B:"+getRGBPixel("b",getColorTab(aImage)[40][40]));
+       // printTab(getColorTab(aImage));
+        
     }
 
     //###AUTRES FONCTIONS###//
@@ -57,21 +61,33 @@ public class SeamCarving{
         }
     }
 
-    public static int[][] getRGBTab(BufferedImage pImage){
+    public static int[][] getColorTab(BufferedImage pImage){
         int pLargeur=pImage.getWidth();
         int pHauteur=pImage.getHeight();
-        int[][] RGBTab = new int[pLargeur][pHauteur];
+        int[][] COLORTab = new int[pLargeur][pHauteur];
         for (int i=0;i<pLargeur;i++){
             for (int j=0;j<pHauteur;j++){
-                RGBTab[i][j]=pImage.getRGB(i,j)&0xFFFFFF;
+                COLORTab[i][j]=pImage.getRGB(i,j);
             }
         }
-        return RGBTab;
+        return COLORTab;
     }
 
-    public static void printRGBTab(int[][] pTab){
-        for (int i=0;i<aLargeurImage;i++){
-            for (int j=0;j<aHauteurImage;j++){
+    public static int getRGBPixel(String pColor, int pPixel){
+        Color vColor = new Color(pPixel);
+        if (pColor=="r"){
+            return vColor.getRed();
+        } else if (pColor=="g"){
+            return vColor.getGreen();
+        } else if (pColor=="b"){
+            return vColor.getBlue();
+        }
+        return 0;
+    }
+
+    public static void printTab(int[][] pTab){
+        for (int i=0;i<pTab.length-1;i++){
+            for (int j=0;j<pTab[0].length;j++){
                 System.out.print(pTab[i][j]+" ");
             }
             System.out.println(" ");
