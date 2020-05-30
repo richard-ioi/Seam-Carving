@@ -1,4 +1,4 @@
-// Richard FOUQUOIRE et Jérémy LAVEILLE - 28/05/2020
+// Richard FOUQUOIRE et Jérémy LAVEILLE - 30/05/2020
 // ESIEE E2 groupe 10
 
 import java.awt.image.*;
@@ -54,7 +54,7 @@ Pour cela le programme utilise différentes focntions dan le but :
             aNomImage=pNom;
             aPourcentageHorizontal = pPourcentageHorizontal;
             aPourcentageVertical = pPourcentageVertical;
-            chargerImage("Images/"+aNomImage);
+            chargerImage("images/"+aNomImage);
             aNewHauteurImage = (int)(aHauteurImage-(aHauteurImage*(aPourcentageVertical)/100));
             aNewLargeurImage = (int)(aLargeurImage-(aLargeurImage*(aPourcentageHorizontal)/100));
             System.out.println("L'image doit être réduite de "+aPourcentageVertical+"% en hauteur et "+aPourcentageHorizontal+"% en largeur");
