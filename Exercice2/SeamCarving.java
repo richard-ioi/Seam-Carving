@@ -20,10 +20,10 @@ public class SeamCarving{
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
         Initialisation(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
-        System.out.println("R:"+getRGBPixel("r",getColorTab(aImage)[40][40]));
-        System.out.println("G:"+getRGBPixel("g",getColorTab(aImage)[40][40]));
-        System.out.println("B:"+getRGBPixel("b",getColorTab(aImage)[40][40]));
-       // printTab(getColorTab(aImage));
+        System.out.println("R:"+getRGBPixel("r",getColorTab()[40][40]));
+        System.out.println("G:"+getRGBPixel("g",getColorTab()[40][40]));
+        System.out.println("B:"+getRGBPixel("b",getColorTab()[40][40]));
+        printTab(getRGBTab("g"));
         
     }
 
@@ -50,8 +50,6 @@ public class SeamCarving{
             aLargeurImage = aImage.getWidth();
             aHauteurImage = aImage.getHeight();
             System.out.println("L'image s'est bien chargée");
-            //System.out.println("Informations de l'image:");
-            //System.out.println(aImage);
             System.out.println("Le nom de l'image est : "+aNomImage);
             System.out.println("Largeur de l'image : "+aLargeurImage+"px, Hauteur de l'image : "+aHauteurImage+"px");
             System.out.println("L'image doit être réduite de "+aPourcentageHorizontal+"% en largeur et "+aPourcentageVertical+"% en hauteur");
@@ -61,13 +59,11 @@ public class SeamCarving{
         }
     }
 
-    public static int[][] getColorTab(BufferedImage pImage){
-        int pLargeur=pImage.getWidth();
-        int pHauteur=pImage.getHeight();
-        int[][] COLORTab = new int[pLargeur][pHauteur];
-        for (int i=0;i<pLargeur;i++){
-            for (int j=0;j<pHauteur;j++){
-                COLORTab[i][j]=pImage.getRGB(i,j);
+    public static int[][] getColorTab(){
+        int[][] COLORTab = new int[aLargeurImage][aHauteurImage];
+        for (int i=0;i<aLargeurImage;i++){
+            for (int j=0;j<aHauteurImage;j++){
+                COLORTab[i][j]=aImage.getRGB(i,j);
             }
         }
         return COLORTab;
@@ -83,6 +79,16 @@ public class SeamCarving{
             return vColor.getBlue();
         }
         return 0;
+    }
+
+    public static int[][] getRGBTab(String pColor){
+        int[][]vRGBTab=new int[aLargeurImage][aHauteurImage];
+        for (int i=0; i< aLargeurImage; i++){
+            for (int j=0; j< aHauteurImage; j++){
+                vRGBTab[i][j]=getRGBPixel(pColor,getColorTab()[i][j]);
+            }
+        }
+        return vRGBTab;
     }
 
     public static void printTab(int[][] pTab){
