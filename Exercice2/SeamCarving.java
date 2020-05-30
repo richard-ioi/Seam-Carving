@@ -118,19 +118,25 @@ Pour cela le programme utilise différentes focntions dan le but :
     }
 
     public static void appliquerFiltre(BufferedImage pImage) {
-        /* Définition du noyau */
+
+        /* Définition de la première convolution */
+        Kernel kernel1 = new Kernel(3, 3, new float[]{1f, 0f, -1f, 2f, 0f, -2f, 1f, 0f, -1f});
+        ConvolveOp convolution1 = new ConvolveOp(kernel1);
+        BufferedImage resultatIntermediaire = convolution1.filter(pImage, null);
+
+        Kernel kernel2 = new Kernel(3, 3, new float[]{1f, 2f, 1f, 0f, 0f, 0f, -1f, -2f, -1f});
+        ConvolveOp convolution2 = new ConvolveOp(kernel2);
+
+        /*
         Kernel kernel = new Kernel(3, 3, new float[]{0f,1f,0f, 1f,-4f,1f, 0f,1f,0f});
+        ConvolveOp convolution = new ConvolveOp(kernel);*/
 
-        /* Création de la convolution associée */
-        ConvolveOp convolution = new ConvolveOp(kernel);
-
-        /* Application de la convolution à l'image */
-        aResizedImage=convolution.filter(pImage, null);
+        aResizedImage = convolution2.filter(resultatIntermediaire, null);
     }
 
     public static void CreerImage(){
         try{
-            ImageIO.write(aResizedImage, "PNG", new File("resized_images/resized_"+aNomImage));
+            ImageIO.write(aResizedImage, "JPG", new File("resized_images/resized_"+aNomImage));
         }
         catch (IOException e){
         }
