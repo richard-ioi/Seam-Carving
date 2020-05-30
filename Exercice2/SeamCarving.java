@@ -27,7 +27,7 @@ public class SeamCarving{
         System.out.println("G:"+getRGBPixel("g",getColorTab(aImage)[10][10]));
         System.out.println("B:"+getRGBPixel("b",getColorTab(aImage)[10][10]));
         appliquerFiltre();
-        printTab(getRGBTab());
+        printTab(getRGBTab("r",aImage));
        // printTab(getColorTab(aImage));
         
     }
@@ -64,11 +64,13 @@ public class SeamCarving{
         }
     }
 
-    public static int[][] getColorTab(){
-        int[][] COLORTab = new int[aLargeurImage][aHauteurImage];
-        for (int i=0;i<aLargeurImage;i++){
-            for (int j=0;j<aHauteurImage;j++){
-                COLORTab[i][j]=aImage.getRGB(i,j);
+    public static int[][] getColorTab(BufferedImage pImage){
+        int pLargeurImage = pImage.getWidth();
+        int pHauteurImage = pImage.getHeight();
+        int[][] COLORTab = new int[pLargeurImage][pHauteurImage];
+        for (int i=0;i<pLargeurImage;i++){
+            for (int j=0;j<pHauteurImage;j++){
+                COLORTab[i][j]=pImage.getRGB(i,j);
             }
         }
         return COLORTab;
@@ -86,11 +88,13 @@ public class SeamCarving{
         return 0;
     }
 
-    public static int[][] getRGBTab(String pColor){
-        int[][]vRGBTab=new int[aLargeurImage][aHauteurImage];
-        for (int i=0; i< aLargeurImage; i++){
-            for (int j=0; j< aHauteurImage; j++){
-                vRGBTab[i][j]=getRGBPixel(pColor,getColorTab()[i][j]);
+    public static int[][] getRGBTab(String pColor, BufferedImage pImage){
+        int pLargeurImage = pImage.getWidth();
+        int pHauteurImage = pImage.getHeight();
+        int[][]vRGBTab=new int[pLargeurImage][pHauteurImage];
+        for (int i=0; i< pLargeurImage; i++){
+            for (int j=0; j< pHauteurImage; j++){
+                vRGBTab[i][j]=getRGBPixel(pColor,getColorTab(pImage)[i][j]);
             }
         }
         return vRGBTab;
