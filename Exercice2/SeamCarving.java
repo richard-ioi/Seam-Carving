@@ -35,8 +35,8 @@ Pour cela le programme utilise différentes focntions dan le but :
         System.out.println("G:"+getRGBPixel("g",getColorTab(aImage)[10][10]));
         System.out.println("B:"+getRGBPixel("b",getColorTab(aImage)[10][10]));
         appliquerFiltre(aImage);
-        printTab(getRGBTab("r",aImage));
-       // printTab(getColorTab(aImage));
+        //printTab(getRGBTab("r",aImage));
+        CreerImage();
         
     }
 
@@ -126,6 +126,14 @@ Pour cela le programme utilise différentes focntions dan le but :
 
         /* Application de la convolution à l'image */
         aResizedImage=convolution.filter(pImage, null);
+    }
+
+    public static void CreerImage(){
+        try{
+            ImageIO.write(aResizedImage, "PNG", new File("resized_images/resized_"+aNomImage));
+        }
+        catch (IOException e){
+        }
     }
 
 }
