@@ -19,7 +19,8 @@ public class SeamCarving{
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
         Initialisation(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
-        System.out.println("Valeur RGB Du tableau en 0, 0:"+getRGBTab(aImage)[0][0]);
+        //System.out.println("Valeur RGB Du tableau en 0, 0:"+getRGBTab(aImage)[0][0]);
+        printRGBTab(getRGBTab(aImage));
     }
 
     //###AUTRES FONCTIONS###//
@@ -62,9 +63,18 @@ public class SeamCarving{
         int[][] RGBTab = new int[pLargeur][pHauteur];
         for (int i=0;i<pLargeur;i++){
             for (int j=0;j<pHauteur;j++){
-                RGBTab[i][j]=pImage.getRGB(i,j);
+                RGBTab[i][j]=pImage.getRGB(i,j)&0xFFFFFF;
             }
         }
         return RGBTab;
+    }
+
+    public static void printRGBTab(int[][] pTab){
+        for (int i=0;i<aLargeurImage;i++){
+            for (int j=0;j<aHauteurImage;j++){
+                System.out.print(pTab[i][j]+" ");
+            }
+            System.out.println(" ");
+        }
     }
 }
