@@ -20,6 +20,7 @@ Pour cela le programme utilise différentes focntions dan le but :
 */
 
     //###ATTRIBUTS###//
+    public static final int aInfini = Integer.MAX_VALUE; // Constante l'infini qui nous sert plus tard, pour que la coccinelle ne sorte pas de la grille
     public static BufferedImage aImage = null;
     public static BufferedImage aEnergyImage = null;
     public static BufferedImage aResizedImage = null;
@@ -30,12 +31,19 @@ Pour cela le programme utilise différentes focntions dan le but :
     public static int aHauteurImage;
     public static int aNewLargeurImage;
     public static int aNewHauteurImage;
+    public static int[][] aGrille;
+    public static int[][] aCostTable;
 
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
         Initialisation(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
-        appliquerFiltre(aImage);
         System.out.println("Nouvelle hauteur = "+aNewHauteurImage+"px, nouvelle largeur = "+aNewLargeurImage+"px");
+        appliquerFiltre(aImage);
+        calculCostTable(aEnergyImage);
+        //printTab(aGrille);
+        System.out.println("");
+        //printTab(aCostTable);
+        creerImage(aCostTable);
         creerFichier();
     }
 
@@ -50,7 +58,7 @@ Pour cela le programme utilise différentes focntions dan le but :
             aNewHauteurImage = (int)(aHauteurImage-(aHauteurImage*(aPourcentageVertical)/100));
             aNewLargeurImage = (int)(aLargeurImage-(aLargeurImage*(aPourcentageHorizontal)/100));
             System.out.println("L'image doit être réduite de "+aPourcentageVertical+"% en hauteur et "+aPourcentageHorizontal+"% en largeur");
-        } 
+        }
         catch (Exception e){
             System.out.println("ERREUR ! La commande a été mal introduite.");
             System.out.println("Vérifiez que vous avez bien tapé la commande comme suit :");
@@ -76,10 +84,10 @@ Pour cela le programme utilise différentes focntions dan le but :
     public static int[][] getColorTab(BufferedImage pImage){
         int pLargeurImage = pImage.getWidth();
         int pHauteurImage = pImage.getHeight();
-        int[][] COLORTab = new int[pLargeurImage][pHauteurImage];
-        for (int i=0;i<pLargeurImage;i++){
-            for (int j=0;j<pHauteurImage;j++){
-                COLORTab[i][j]=pImage.getRGB(i,j);
+        int[][] COLORTab = new int[pHauteurImage][pLargeurImage];
+        for (int i=0;i<pHauteurImage;i++){
+            for (int j=0;j<pLargeurImage;j++){
+                COLORTab[i][j]=pImage.getRGB(j,i);
             }
         }
         return COLORTab;
@@ -100,9 +108,9 @@ Pour cela le programme utilise différentes focntions dan le but :
     public static int[][] getRGBTab(String pColor, BufferedImage pImage){
         int pLargeurImage = pImage.getWidth();
         int pHauteurImage = pImage.getHeight();
-        int[][]vRGBTab=new int[pLargeurImage][pHauteurImage];
-        for (int i=0; i< pLargeurImage; i++){
-            for (int j=0; j< pHauteurImage; j++){
+        int[][]vRGBTab=new int[pHauteurImage][pLargeurImage];
+        for (int i=0 ; i<pHauteurImage ; i++){
+            for (int j=0 ; j<pLargeurImage ; j++){
                 vRGBTab[i][j]=getRGBPixel(pColor,getColorTab(pImage)[i][j]);
             }
         }
@@ -132,14 +140,14 @@ Pour cela le programme utilise différentes focntions dan le but :
         Kernel kernel = new Kernel(3, 3, new float[]{0f,1f,0f, 1f,-4f,1f, 0f,1f,0f});
         ConvolveOp convolution = new ConvolveOp(kernel);*/
 
-        aResizedImage = convolution2.filter(resultatIntermediaire, null);
+        aEnergyImage = convolution2.filter(resultatIntermediaire, null);
     }
 
     public static void creerImage(int[][] pGrille){
-        aResizedImage = new BufferedImage();
+        aResizedImage = new BufferedImage(pGrille[0].length, pGrille.length, BufferedImage.TYPE_INT_RGB);
         for (int i=0;i<pGrille.length-1;i++){
             for (int j=0;j<pGrille[0].length;j++){
-                aResizedImage.setRGB(i,j,pGrille[i][j]);
+                aResizedImage.setRGB(j,i,pGrille[i][j]);
             }
         }
     }
@@ -149,6 +157,76 @@ Pour cela le programme utilise différentes focntions dan le but :
             ImageIO.write(aResizedImage, "JPG", new File("resized_images/resized_"+aNomImage));
         }
         catch (IOException e){
+        }
+    }
+    
+    /*
+     Fonction qui calcule le coût des déplacements Nord-Ouest
+    */
+    public static int no(int pL, int pC, int[][] pGrille){
+        if (pC-1<0){
+            return aInfini;
+        }else{
+            return pGrille[pL+1][pC-1];
+        }
+    }
+
+    /*
+    Fonction qui calcule le coût des déplacements Nord
+    */
+    public static int n(int pL, int pC, int[][] pGrille){
+        return pGrille[pL+1][pC];
+    }
+
+    /*
+    Fonction qui calcule le coût des déplacements Nord-Est
+    */
+    public static int ne(int pL, int pC, int[][] pGrille){
+        if (pC+1>=pGrille[0].length){
+            return aInfini;
+        }else{
+            return pGrille[pL+1][pC+1];
+        }
+    }
+
+    /*
+    Fonction qui calcule le nombre maximum de pucerons atteints pour chaque case
+    */
+    public static void calculCostTable(BufferedImage pImage){
+        int pHauteurImage = pImage.getHeight();
+        int pLargeurImage = pImage.getWidth();
+        aCostTable = new int[pHauteurImage][pLargeurImage];
+        aGrille = getColorTab(aImage);
+
+        for (int i=0; i<pLargeurImage ; i++){
+            aCostTable[0][i]=aGrille[0][i];
+        }
+
+        int Mno=0;
+        int Mn=0;
+        int Mne=0;
+
+        for (int l=1 ; l<pHauteurImage ; l++){
+            for (int c=0 ; c<pLargeurImage ; c++){
+
+                Mn=aCostTable[l-1][c]+n(l-1,c,aGrille);
+
+                if(c+1>=pLargeurImage) {
+                    Mno = aInfini;
+                }
+                else {
+                    Mno=aCostTable[l-1][c+1]+no(l-1,c+1,aGrille);
+                }
+
+                if(c-1 < 0) {
+                    Mne = aInfini;
+                }
+                else {
+                    Mne=aCostTable[l-1][c-1]+ne(l-1,c-1,aGrille);
+                }
+
+                aCostTable[l][c]= (int)Math.min(Mn, (int)Math.min(Mno,Mne));
+            }
         }
     }
 
