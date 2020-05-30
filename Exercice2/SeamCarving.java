@@ -1,7 +1,6 @@
-/*
-Cet algorithme correspond à l'exercice n°2 du projet de l'unité d'algorithmique du 2e semestre.
-Il permet,
-*/
+// Richard FOUQUOIRE et Jérémy LAVEILLE - 28/05/2020
+// ESIEE E2 groupe 10
+
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
@@ -10,6 +9,15 @@ import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 
 public class SeamCarving{
+/*
+Cet algorithme correspond à l'exercice n°2 du projet de l'unité d'algorithmique du 2e semestre.
+Il permet, de redimensionner une image par la méthode du Seam Carving.
+Pour cela le programme utilise différentes focntions dan le but :
+    -> De charger une image à partir d'un fichier (placé en argument),
+    -> De lui appliquer un filtre par convolution pour obtenir "l'énergie" des différents pixels,
+    -> De déterminer les "seams" correspondant au chemins des pixels à l'énergie la plus faible,
+    -> De redimensionner l'image en retirant ces pixels moins importants et de créer un nouveau fichier png.
+*/
 
     //###ATTRIBUTS###//
     public static BufferedImage aImage = null;
@@ -26,7 +34,7 @@ public class SeamCarving{
         System.out.println("R:"+getRGBPixel("r",getColorTab(aImage)[10][10]));
         System.out.println("G:"+getRGBPixel("g",getColorTab(aImage)[10][10]));
         System.out.println("B:"+getRGBPixel("b",getColorTab(aImage)[10][10]));
-        appliquerFiltre();
+        appliquerFiltre(aImage);
         printTab(getRGBTab("r",aImage));
        // printTab(getColorTab(aImage));
         
@@ -109,7 +117,7 @@ public class SeamCarving{
         }
     }
 
-    public static void appliquerFiltre() {
+    public static void appliquerFiltre(BufferedImage pImage) {
         /* Définition du noyau */
         Kernel kernel = new Kernel(3, 3, new float[]{0f,1f,0f, 1f,-4f,1f, 0f,1f,0f});
 
@@ -117,7 +125,7 @@ public class SeamCarving{
         ConvolveOp convolution = new ConvolveOp(kernel);
 
         /* Application de la convolution à l'image */
-        aResizedImage=convolution.filter(aImage, null);
+        aResizedImage=convolution.filter(pImage, null);
     }
 
 }
