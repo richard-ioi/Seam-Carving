@@ -6,11 +6,14 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 import java.awt.Color;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
 
 public class SeamCarving{
 
     //###ATTRIBUTS###//
     public static BufferedImage aImage = null;
+    public static BufferedImage aResizedImage = null;
     public static int aPourcentageHorizontal;
     public static int aPourcentageVertical;
     public static String aNomImage;
@@ -20,10 +23,12 @@ public class SeamCarving{
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
         Initialisation(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
-        System.out.println("R:"+getRGBPixel("r",getColorTab()[40][40]));
-        System.out.println("G:"+getRGBPixel("g",getColorTab()[40][40]));
-        System.out.println("B:"+getRGBPixel("b",getColorTab()[40][40]));
-        printTab(getRGBTab("g"));
+        System.out.println("R:"+getRGBPixel("r",getColorTab(aImage)[10][10]));
+        System.out.println("G:"+getRGBPixel("g",getColorTab(aImage)[10][10]));
+        System.out.println("B:"+getRGBPixel("b",getColorTab(aImage)[10][10]));
+        appliquerFiltre();
+        printTab(getRGBTab());
+       // printTab(getColorTab(aImage));
         
     }
 
@@ -99,4 +104,16 @@ public class SeamCarving{
             System.out.println(" ");
         }
     }
+
+    public static void appliquerFiltre() {
+        /* Définition du noyau */
+        Kernel kernel = new Kernel(3, 3, new float[]{0f,1f,0f, 1f,-4f,1f, 0f,1f,0f});
+
+        /* Création de la convolution associée */
+        ConvolveOp convolution = new ConvolveOp(kernel);
+
+        /* Application de la convolution à l'image */
+        aResizedImage=convolution.filter(aImage, null);
+    }
+
 }
