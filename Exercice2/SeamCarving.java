@@ -21,33 +21,35 @@ Pour cela le programme utilise différentes focntions dan le but :
 
     //###ATTRIBUTS###//
     public static BufferedImage aImage = null;
+    public static BufferedImage aEnergyImage = null;
     public static BufferedImage aResizedImage = null;
-    public static int aPourcentageHorizontal;
-    public static int aPourcentageVertical;
+    public static float aPourcentageHorizontal;
+    public static float aPourcentageVertical;
     public static String aNomImage;
     public static int aLargeurImage;
     public static int aHauteurImage;
+    public static int aNewLargeurImage;
+    public static int aNewHauteurImage;
 
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
         Initialisation(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
-        System.out.println("R:"+getRGBPixel("r",getColorTab(aImage)[10][10]));
-        System.out.println("G:"+getRGBPixel("g",getColorTab(aImage)[10][10]));
-        System.out.println("B:"+getRGBPixel("b",getColorTab(aImage)[10][10]));
         appliquerFiltre(aImage);
-        //printTab(getRGBTab("r",aImage));
-        CreerImage();
-        
+        System.out.println("Nouvelle hauteur = "+aNewHauteurImage+"px, nouvelle largeur = "+aNewLargeurImage+"px");
+        creerFichier();
     }
 
     //###AUTRES FONCTIONS###//
 
-    public static void Initialisation (final String pNom, final int pPourcentageHorizontal, final int pPourcentageVertical){
+    public static void Initialisation (final String pNom, final int pPourcentageVertical, final int pPourcentageHorizontal){
         try{
             aNomImage=pNom;
             aPourcentageHorizontal = pPourcentageHorizontal;
             aPourcentageVertical = pPourcentageVertical;
             chargerImage("Images/"+aNomImage);
+            aNewHauteurImage = (int)(aHauteurImage-(aHauteurImage*(aPourcentageVertical)/100));
+            aNewLargeurImage = (int)(aLargeurImage-(aLargeurImage*(aPourcentageHorizontal)/100));
+            System.out.println("L'image doit être réduite de "+aPourcentageVertical+"% en hauteur et "+aPourcentageHorizontal+"% en largeur");
         } 
         catch (Exception e){
             System.out.println("ERREUR ! La commande a été mal introduite.");
@@ -60,12 +62,11 @@ Pour cela le programme utilise différentes focntions dan le but :
     public static void chargerImage(String pFileName){
         try{
             aImage = ImageIO.read(new File(pFileName));
-            aLargeurImage = aImage.getWidth();
             aHauteurImage = aImage.getHeight();
+            aLargeurImage = aImage.getWidth();
             System.out.println("L'image s'est bien chargée");
             System.out.println("Le nom de l'image est : "+aNomImage);
-            System.out.println("Largeur de l'image : "+aLargeurImage+"px, Hauteur de l'image : "+aHauteurImage+"px");
-            System.out.println("L'image doit être réduite de "+aPourcentageHorizontal+"% en largeur et "+aPourcentageVertical+"% en hauteur");
+            System.out.println("Hauteur de l'image : "+aHauteurImage+"px, Largeur de l'image : "+aLargeurImage+"px");
         }
         catch (IOException e){
             System.out.println("L'image ne s'est pas chargée, vérifiez le nom.");
@@ -134,7 +135,16 @@ Pour cela le programme utilise différentes focntions dan le but :
         aResizedImage = convolution2.filter(resultatIntermediaire, null);
     }
 
-    public static void CreerImage(){
+    public static void creerImage(int[][] pGrille){
+        aResizedImage = new BufferedImage();
+        for (int i=0;i<pGrille.length-1;i++){
+            for (int j=0;j<pGrille[0].length;j++){
+                aResizedImage.setRGB(i,j,pGrille[i][j]);
+            }
+        }
+    }
+
+    public static void creerFichier(){
         try{
             ImageIO.write(aResizedImage, "JPG", new File("resized_images/resized_"+aNomImage));
         }
