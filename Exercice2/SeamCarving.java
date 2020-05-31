@@ -54,7 +54,7 @@ Pour cela le programme utilise différentes focntions dan le but :
         //printTab(aCostTable);
         calculSeamVertical();
         System.out.println("Le plus faible coût correspond à :"+aPlusFaibleCoutVertical);
-        creerImage(aCostTable);
+        creerImage(resizeGrille(aGrille));
         creerFichier();
     }
 
@@ -155,11 +155,14 @@ Pour cela le programme utilise différentes focntions dan le but :
     }
 
     public static int[][] resizeGrille(int[][] pGrille) {
-        int[][] vGrille = new int[pGrille[0].length-1][pGrille.length-1];
+        int[][] vGrille = new int[pGrille.length][pGrille[0].length];
         for (int i=0;i<pGrille.length-1;i++){
-            for (int j=0;j<pGrille[0].length;j++){
-                if( Arrays.asList(aVerticalSeamTab).indexOf(new int[] {i,j}) != -1 && Arrays.asList(aHorizontalSeamTab).indexOf(new int[] {i,j}) != -1 ) {
+            for (int j=0;j<pGrille[0].length-1;j++){
+                if( Arrays.asList(aVerticalSeamTab).indexOf(new int[] {j,i}) == -1 ) {
                     vGrille[i][j] = pGrille[i][j];
+                }
+                else {
+                    vGrille[i][j] = -10485760;
                 }
             }
         }
