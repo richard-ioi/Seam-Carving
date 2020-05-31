@@ -257,10 +257,8 @@ Pour cela le programme utilise différentes focntions dan le but :
         aVerticalSeamTab = new int[aHauteurImage][2];
         plusFaibleCoutVertical();
         seamFinderVertical(aYmax,aXmax,-1);
-        System.out.println("-----------------");
-        System.out.println("");
         for (int i=0;i<aHauteurImage;i++){
-            System.out.printf("["+aVerticalSeamTab[i][0]+","+aVerticalSeamTab[i][1]+"]");
+            System.out.println("["+aVerticalSeamTab[i][0]+","+aVerticalSeamTab[i][1]+"]");
         }
         System.out.println("Hauteur : "+aHauteurImage);
         System.out.println("aYmax :" + aYmax);
@@ -296,7 +294,6 @@ Pour cela le programme utilise différentes focntions dan le but :
             seamFinderVertical(pL-1,pC+1,pCompteur);
         }
         aVerticalSeamTab[pCompteur] = new int[] {pL,pC};
-        System.out.printf("(%d,%d)",pL,pC);
 
         if (pL==0){
             aYmin=pL;
@@ -308,7 +305,7 @@ Pour cela le programme utilise différentes focntions dan le but :
         int valeurMinV = IntStream.of(aCostTable[aCostTable.length-1]).min().getAsInt();
         int[] vMax = new int[] {aCostTable.length-1 , Arrays.asList(aCostTable[aCostTable.length-1]).indexOf(valeurMinV)};
         aYmax = vMax[0];
-        aXmax = vMax[1];
+        aXmax = vMax[1]+1;
     }
 
 }
