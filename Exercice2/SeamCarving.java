@@ -156,12 +156,23 @@ Pour cela le programme utilise différentes focntions dan le but :
 
     public static int[][] resizeGrille(int[][] pGrille) {
         int[][] vGrille = new int[pGrille.length][pGrille[0].length];
+        int indice = -1;
         for (int i=0;i<pGrille.length-1;i++){
             for (int j=0;j<pGrille[0].length-1;j++){
-                if( Arrays.asList(aVerticalSeamTab).indexOf(new int[] {j,i}) == -1 ) {
+                for (int k=0 ; k<aVerticalSeamTab.length ; k++) {
+                    if(aVerticalSeamTab[k][0] == i && aVerticalSeamTab[k][1] == j) {
+                        indice = k;
+                    }
+                    else {
+                        indice = -1;
+                    }
+                }
+                //System.out.print(indice+" ");
+                if( indice == -1 ) {
                     vGrille[i][j] = pGrille[i][j];
                 }
                 else {
+                    System.out.println("PIXEL ROUGE");
                     vGrille[i][j] = -10485760;
                 }
             }
@@ -260,9 +271,9 @@ Pour cela le programme utilise différentes focntions dan le but :
         aVerticalSeamTab = new int[aHauteurImage][2];
         plusFaibleCoutVertical();
         seamFinderVertical(aYmax,aXmax,-1);
-        for (int i=0;i<aHauteurImage;i++){
+        /*for (int i=0;i<aHauteurImage;i++){
             System.out.println("["+aVerticalSeamTab[i][0]+","+aVerticalSeamTab[i][1]+"]");
-        }
+        }*/
         System.out.println("Hauteur : "+aHauteurImage);
         System.out.println("aYmax :" + aYmax);
     }
