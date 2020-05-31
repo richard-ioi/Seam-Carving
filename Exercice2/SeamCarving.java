@@ -47,14 +47,17 @@ Pour cela le programme utilise différentes focntions dan le but :
     public static void main(String[] args){
         Initialisation(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
         System.out.println("Nouvelle hauteur = "+aNewHauteurImage+"px, nouvelle largeur = "+aNewLargeurImage+"px");
-        appliquerFiltre(aImage);
-        calculCostTable(aEnergyImage);
-        //printTab(aGrille);
-        System.out.println("");
-        //printTab(aCostTable);
-        calculSeamVertical();
-        System.out.println("Le plus faible coût correspond à :"+aPlusFaibleCoutVertical);
-        creerImage(resizeGrille(aGrille));
+        while(aLargeurImage > aNewLargeurImage) {
+            appliquerFiltre(aImage);
+            calculCostTable(aEnergyImage);
+            //printTab(aGrille);
+            System.out.println("");
+            //printTab(aCostTable);
+            calculSeamVertical();
+            System.out.println("Le plus faible coût correspond à :"+aPlusFaibleCoutVertical);
+            aGrille = resizeGrille(aGrille);
+        }
+        creerImage(aGrille);
         creerFichier();
     }
 
@@ -162,6 +165,7 @@ Pour cela le programme utilise différentes focntions dan le but :
                 for (int k=0 ; k<aVerticalSeamTab.length ; k++) {
                     if(aVerticalSeamTab[k][0] == i && aVerticalSeamTab[k][1] == j) {
                         indice = k;
+                        break;
                     }
                     else {
                         indice = -1;
@@ -172,7 +176,7 @@ Pour cela le programme utilise différentes focntions dan le but :
                     vGrille[i][j] = pGrille[i][j];
                 }
                 else {
-                    System.out.println("PIXEL ROUGE");
+                    //System.out.println("PIXEL ROUGE");
                     vGrille[i][j] = -10485760;
                 }
             }
