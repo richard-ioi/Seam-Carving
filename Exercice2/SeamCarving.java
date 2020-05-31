@@ -1,14 +1,14 @@
 // Richard FOUQUOIRE et Jérémy LAVEILLE - 30/05/2020
 // ESIEE E2 groupe 10
 
-import java.awt.image.*;
 import java.io.*;
 import java.util.stream.IntStream;
-
 import javax.imageio.*;
 import java.awt.Color;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
+import java.awt.image.*;
+//import java.awt.image.ConvolveOp;
+//import java.awt.image.Kernel;
+import java.lang.*;
 
 public class SeamCarving{
 /*
@@ -41,6 +41,7 @@ Pour cela le programme utilise différentes focntions dan le but :
     public static int aYmax;
     public static int aPlusFaibleCoutVertical;
     public static int[][] aVerticalSeamTab;
+    public static int[][] aHorizontalSeamTab;
 
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
@@ -153,17 +154,17 @@ Pour cela le programme utilise différentes focntions dan le but :
         aEnergyImage = convolution2.filter(resultatIntermediaire, null);
     }
 
-    public static int[][] resizeGrille(int[][] pGrille) {
+    /*public static int[][] resizeGrille(int[][] pGrille) {
         int[][] vGrille = new int[pGrille[0].length-1][pGrille.length-1];
         for (int i=0;i<pGrille.length-1;i++){
             for (int j=0;j<pGrille[0].length;j++){
-                if( !ArrayUtils.indexOf(verticalSeam,new int[] {i,j}) && !ArrayUtils.indexOf(horizontalSeam,new int[] {i,j}) ) {
+                if( !ArrayUtils.indexOf(aVerticalSeamTab,new int[] {i,j}) && !ArrayUtils.indexOf(aHorizontalSeamTab,new int[] {i,j}) ) {
                     vGrille[i][j] = pGrille[i][j];
                 }
             }
         }
         return vGrille;
-    }
+    }*/
 
     public static void creerImage(int[][] pGrille){
         aResizedImage = new BufferedImage(pGrille[0].length, pGrille.length, BufferedImage.TYPE_INT_RGB);
@@ -252,6 +253,19 @@ Pour cela le programme utilise différentes focntions dan le but :
         }
     }
 
+    static void calculSeamVertical(){
+        aVerticalSeamTab = new int[aHauteurImage][2];
+        plusFaibleCoutVertical();
+        seamFinderVertical(aYmax,aXmax,-1);
+        System.out.println("-----------------");
+        System.out.println("");
+        for (int i=0;i<aHauteurImage;i++){
+            System.out.printf("["+aVerticalSeamTab[i][0]+","+aVerticalSeamTab[i][1]+"]");
+        }
+        System.out.println("Hauteur : "+aHauteurImage);
+        System.out.println("aYmax :" + aYmax);
+    }
+
     static void seamFinderVertical(int pL, int pC, int pCompteur){
         pCompteur+=1;
         if ((pL==0) && (pC==0)){
@@ -282,32 +296,18 @@ Pour cela le programme utilise différentes focntions dan le but :
             seamFinderVertical(pL-1,pC+1,pCompteur);
         }
         aVerticalSeamTab[pCompteur] = new int[] {pL,pC};
+        System.out.printf("(%d,%d)",pL,pC);
 
         if (pL==0){
             aYmin=pL;
-            aXmax=pC;
-        }
-    }
-
-    static void calculSeamVertical(){
-        aVerticalSeamTab = new int[aHauteurImage][2];
-        plusFaibleCoutVertical();
-        seamFinderVertical(aYmax,aXmax,-1);
-        for (int i=0;i<aHauteurImage;i++){
-            System.out.println("["+aVerticalSeamTab[i][0]+","+aVerticalSeamTab[i][1]+"]");
+            aXmin=pC;
         }
     }
 
     static void plusFaibleCoutVertical(){
-        for (int l=0; l<aHauteurImage;l++){
-            for (int c=0; c<aLargeurImage;c++){
-                if (aCostTable[l][c]<aPlusFaibleCoutVertical){
-                    aPlusFaibleCoutVertical=aCostTable[l][c];
-                    aYmax=l;
-                    aXmax=c;
-                }
-            }
-        }
+        int valeurMinV = IntStream.of(aCostTable[aCostTable.length-1]).min();
+        vMax = new int[] {aCostTable.length-1 , ArrayUtils.indexOf(pGrille[aCostTable.length-1],valeurMinV)};
+        aXmax = vMax[]
     }
 
 }
