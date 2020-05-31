@@ -33,6 +33,12 @@ Pour cela le programme utilise différentes focntions dan le but :
     public static int aNewHauteurImage;
     public static int[][] aGrille;
     public static int[][] aCostTable;
+    public static int aXmin;
+    public static int aYmin;
+    public static int aXmax;
+    public static int aYmax;
+    public static int aPlusFaibleCoutVertical;
+    public static int[][] aVerticalSeamTab;
 
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
@@ -43,6 +49,8 @@ Pour cela le programme utilise différentes focntions dan le but :
         //printTab(aGrille);
         System.out.println("");
         //printTab(aCostTable);
+        calculSeamVertical();
+        System.out.println("Le plus faible coût correspond à :"+aPlusFaibleCoutVertical);
         creerImage(aCostTable);
         creerFichier();
     }
@@ -154,7 +162,7 @@ Pour cela le programme utilise différentes focntions dan le but :
 
     public static void creerFichier(){
         try{
-            ImageIO.write(aResizedImage, "JPG", new File("resized_images/resized_"+aNomImage));
+            ImageIO.write(aResizedImage, "PNG", new File("resized_images/resized_"+aNomImage));
         }
         catch (IOException e){
         }
@@ -226,6 +234,64 @@ Pour cela le programme utilise différentes focntions dan le but :
                 }
 
                 aCostTable[l][c]= (int)Math.min(Mn, (int)Math.min(Mno,Mne));
+            }
+        }
+    }
+
+    static void seamFinderVertical(int pL, int pC, int pCompteur){
+        pCompteur+=1;
+        if ((pL==0) && (pC==0)){
+            System.out.print("(0,0)");
+            return;
+        }
+        int Mno=aInfini;
+        int Mn=aInfini;
+        int Mne=aInfini;
+
+        if((pL-1>=0)){
+            Mn=aCostTable[pL-1][pC]+n(pL-1,pC,aGrille);
+        }
+        if((pL-1>=0) && (pC-1>=0)){
+            Mne=aCostTable[pL-1][pC-1]+ne(pL-1,pC-1,aGrille);
+        }
+        if((pL-1>=0) && (pC+1<aLargeurImage)){
+            Mno=aCostTable[pL-1][pC+1]+no(pL-1,pC+1,aGrille);
+        }
+
+        if(aCostTable[pL][pC] == Mn){
+            seamFinderVertical(pL-1,pC,pCompteur);
+        } 
+        else if (aCostTable[pL][pC]==Mne){
+            seamFinderVertical(pL-1,pC-1,pCompteur);
+        }
+        else if (aCostTable[pL][pC]==Mno){
+            seamFinderVertical(pL-1,pC+1,pCompteur);
+        }
+        aVerticalSeamTab[pCompteur] = new int[] {pL,pC};
+
+        if (pL==0){
+            aYmin=pL;
+            aXmax=pC;
+        }
+    }
+
+    static void calculSeamVertical(){
+        aVerticalSeamTab = new int[aHauteurImage][2];
+        plusFaibleCoutVertical();
+        seamFinderVertical(aYmax,aXmax,-1);
+        for (int i=0;i<aHauteurImage;i++){
+            System.out.println("["+aVerticalSeamTab[i][0]+","+aVerticalSeamTab[i][1]+"]");
+        }
+    }
+
+    static void plusFaibleCoutVertical(){
+        for (int l=0; l<aHauteurImage;l++){
+            for (int c=0; c<aLargeurImage;c++){
+                if (aCostTable[l][c]<aPlusFaibleCoutVertical){
+                    aPlusFaibleCoutVertical=aCostTable[l][c];
+                    aYmax=l;
+                    aXmax=c;
+                }
             }
         }
     }
