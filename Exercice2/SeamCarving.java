@@ -63,7 +63,7 @@ Pour cela le programme utilise différentes focntions dan le but :
         creerFichier();
     }
 
-    //###AUTRES FONCTIONS###//
+    //###FONCTIONS ESSENTIELLES###//
 
     public static void Initialisation (final String pNom, final int pPourcentageVertical, final int pPourcentageHorizontal){
         try{
@@ -83,6 +83,8 @@ Pour cela le programme utilise différentes focntions dan le but :
 
     }
 
+    //###GESTION DES IMAGES / FICHIERS ###//
+
     public static void chargerImage(String pFileName){
         try{
             aImage = ImageIO.read(new File(pFileName));
@@ -94,6 +96,23 @@ Pour cela le programme utilise différentes focntions dan le but :
         }
         catch (IOException e){
             System.out.println("L'image ne s'est pas chargée, vérifiez le nom.");
+        }
+    }
+
+    public static void creerImage(int[][] pGrille){
+        aResizedImage = new BufferedImage(pGrille[0].length, pGrille.length, BufferedImage.TYPE_INT_RGB);
+        for (int i=0;i<pGrille.length-1;i++){
+            for (int j=0;j<pGrille[0].length;j++){
+                aResizedImage.setRGB(j,i,pGrille[i][j]);
+            }
+        }
+    }
+
+    public static void creerFichier(){
+        try{
+            ImageIO.write(aResizedImage, "PNG", new File("resized_images/resized_"+aNomImage));
+        }
+        catch (IOException e){
         }
     }
 
@@ -142,6 +161,8 @@ Pour cela le programme utilise différentes focntions dan le but :
         }
     }
 
+    //###ANALYSE DE L'IMAGE###//
+    
     public static void appliquerFiltre(BufferedImage pImage) {
 
         /* Définition de la première convolution */
@@ -191,22 +212,6 @@ Pour cela le programme utilise différentes focntions dan le but :
         return vGrille;
     }
 
-    public static void creerImage(int[][] pGrille){
-        aResizedImage = new BufferedImage(pGrille[0].length, pGrille.length, BufferedImage.TYPE_INT_RGB);
-        for (int i=0;i<pGrille.length-1;i++){
-            for (int j=0;j<pGrille[0].length;j++){
-                aResizedImage.setRGB(j,i,pGrille[i][j]);
-            }
-        }
-    }
-
-    public static void creerFichier(){
-        try{
-            ImageIO.write(aResizedImage, "PNG", new File("resized_images/resized_"+aNomImage));
-        }
-        catch (IOException e){
-        }
-    }
     
     /*
      Fonction qui calcule le coût des déplacements Nord-Ouest
