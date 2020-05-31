@@ -49,13 +49,17 @@ Pour cela le programme utilise différentes focntions dan le but :
         System.out.println("Nouvelle hauteur = "+aNewHauteurImage+"px, nouvelle largeur = "+aNewLargeurImage+"px");
         while(aLargeurImage > aNewLargeurImage) {
             appliquerFiltre(aImage);
-            calculCostTable(aEnergyImage);
+            calculCostTable(aEnergyImage,aLargeurImage,aHauteurImage);
             //printTab(aGrille);
             System.out.println("");
             //printTab(aCostTable);
             calculSeamVertical();
-            System.out.println("Le plus faible coût correspond à :"+aPlusFaibleCoutVertical);
-            aGrille = resizeGrille(aGrille);
+            //System.out.println("Le plus faible coût correspond à :"+aPlusFaibleCoutVertical);
+            System.out.println("LargeurIMAGE : " + aLargeurImage);
+            creerImage(resizeGrille(aGrille));
+            aImage = aResizedImage;
+            aLargeurImage = aLargeurImage-1;
+            aHauteurImage = aHauteurImage-1;
         }
         creerImage(aGrille);
         creerFichier();
@@ -233,9 +237,9 @@ Pour cela le programme utilise différentes focntions dan le but :
     /*
     
     */
-    public static void calculCostTable(BufferedImage pImage){
-        int pHauteurImage = pImage.getHeight();
-        int pLargeurImage = pImage.getWidth();
+    public static void calculCostTable(BufferedImage pImage, int pLargeurImage, int pHauteurImage){
+        //int pHauteurImage = pImage.getHeight();
+        //int pLargeurImage = pImage.getWidth();
         aCostTable = new int[pHauteurImage][pLargeurImage];
         aGrille = getColorTab(aImage);
 
