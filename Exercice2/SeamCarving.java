@@ -1,8 +1,10 @@
-// Richard FOUQUOIRE et Jérémy LAVEILLE - 28/05/2020
+// Richard FOUQUOIRE et Jérémy LAVEILLE - 30/05/2020
 // ESIEE E2 groupe 10
 
 import java.awt.image.*;
 import java.io.*;
+import java.util.stream.IntStream;
+
 import javax.imageio.*;
 import java.awt.Color;
 import java.awt.image.ConvolveOp;
@@ -62,7 +64,7 @@ Pour cela le programme utilise différentes focntions dan le but :
             aNomImage=pNom;
             aPourcentageHorizontal = pPourcentageHorizontal;
             aPourcentageVertical = pPourcentageVertical;
-            chargerImage("Images/"+aNomImage);
+            chargerImage("images/"+aNomImage);
             aNewHauteurImage = (int)(aHauteurImage-(aHauteurImage*(aPourcentageVertical)/100));
             aNewLargeurImage = (int)(aLargeurImage-(aLargeurImage*(aPourcentageHorizontal)/100));
             System.out.println("L'image doit être réduite de "+aPourcentageVertical+"% en hauteur et "+aPourcentageHorizontal+"% en largeur");
@@ -151,6 +153,18 @@ Pour cela le programme utilise différentes focntions dan le but :
         aEnergyImage = convolution2.filter(resultatIntermediaire, null);
     }
 
+    public static int[][] resizeGrille(int[][] pGrille) {
+        int[][] vGrille = new int[pGrille[0].length-1][pGrille.length-1];
+        for (int i=0;i<pGrille.length-1;i++){
+            for (int j=0;j<pGrille[0].length;j++){
+                if( !ArrayUtils.indexOf(verticalSeam,new int[] {i,j}) && !ArrayUtils.indexOf(horizontalSeam,new int[] {i,j}) ) {
+                    vGrille[i][j] = pGrille[i][j];
+                }
+            }
+        }
+        return vGrille;
+    }
+
     public static void creerImage(int[][] pGrille){
         aResizedImage = new BufferedImage(pGrille[0].length, pGrille.length, BufferedImage.TYPE_INT_RGB);
         for (int i=0;i<pGrille.length-1;i++){
@@ -198,7 +212,7 @@ Pour cela le programme utilise différentes focntions dan le but :
     }
 
     /*
-    Fonction qui calcule le nombre maximum de pucerons atteints pour chaque case
+    
     */
     public static void calculCostTable(BufferedImage pImage){
         int pHauteurImage = pImage.getHeight();
