@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.awt.image.*;
 //import java.awt.image.ConvolveOp;
 //import java.awt.image.Kernel;
-import java.lang.*;
+import java.util.Arrays;
 
 public class SeamCarving{
 /*
@@ -154,17 +154,17 @@ Pour cela le programme utilise différentes focntions dan le but :
         aEnergyImage = convolution2.filter(resultatIntermediaire, null);
     }
 
-    /*public static int[][] resizeGrille(int[][] pGrille) {
+    public static int[][] resizeGrille(int[][] pGrille) {
         int[][] vGrille = new int[pGrille[0].length-1][pGrille.length-1];
         for (int i=0;i<pGrille.length-1;i++){
             for (int j=0;j<pGrille[0].length;j++){
-                if( !ArrayUtils.indexOf(aVerticalSeamTab,new int[] {i,j}) && !ArrayUtils.indexOf(aHorizontalSeamTab,new int[] {i,j}) ) {
+                if( Arrays.asList(aVerticalSeamTab).indexOf(new int[] {i,j}) != -1 && Arrays.asList(aHorizontalSeamTab).indexOf(new int[] {i,j}) != -1 ) {
                     vGrille[i][j] = pGrille[i][j];
                 }
             }
         }
         return vGrille;
-    }*/
+    }
 
     public static void creerImage(int[][] pGrille){
         aResizedImage = new BufferedImage(pGrille[0].length, pGrille.length, BufferedImage.TYPE_INT_RGB);
@@ -305,9 +305,10 @@ Pour cela le programme utilise différentes focntions dan le but :
     }
 
     static void plusFaibleCoutVertical(){
-        int valeurMinV = IntStream.of(aCostTable[aCostTable.length-1]).min();
-        vMax = new int[] {aCostTable.length-1 , ArrayUtils.indexOf(pGrille[aCostTable.length-1],valeurMinV)};
-        aXmax = vMax[]
+        int valeurMinV = IntStream.of(aCostTable[aCostTable.length-1]).min().getAsInt();
+        int[] vMax = new int[] {aCostTable.length-1 , Arrays.asList(aCostTable[aCostTable.length-1]).indexOf(valeurMinV)};
+        aYmax = vMax[0];
+        aXmax = vMax[1];
     }
 
 }
