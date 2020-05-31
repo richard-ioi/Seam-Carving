@@ -35,8 +35,6 @@ Pour cela le programme utilise différentes focntions dan le but :
     public static int aNewHauteurImage;
     public static int[][] aGrille;
     public static int[][] aCostTable;
-    public static int aXmin;
-    public static int aYmin;
     public static int aXmax;
     public static int aYmax;
     public static int aPlusFaibleCoutVertical;
@@ -162,10 +160,11 @@ Pour cela le programme utilise différentes focntions dan le but :
     }
 
     public static int[][] resizeGrille(int[][] pGrille) {
-        int[][] vGrille = new int[pGrille.length][pGrille[0].length];
+        boolean vPixelAffiche = true;
+        int[][] vGrille = new int[pGrille.length-1][pGrille[0].length-1];
         int indice = -1;
-        for (int i=0;i<pGrille.length-1;i++){
-            for (int j=0;j<pGrille[0].length-1;j++){
+        for (int j=1;j<pGrille[0].length-1;j++){
+            for (int i=1;i<pGrille.length-1;i++){
                 for (int k=0 ; k<aVerticalSeamTab.length ; k++) {
                     if(aVerticalSeamTab[k][0] == i && aVerticalSeamTab[k][1] == j) {
                         indice = k;
@@ -177,11 +176,15 @@ Pour cela le programme utilise différentes focntions dan le but :
                 }
                 //System.out.print(indice+" ");
                 if( indice == -1 ) {
-                    vGrille[i][j] = pGrille[i][j];
+                    if (vPixelAffiche==true){
+                        vGrille[i][j] = pGrille[i][j];
+                    }else{
+                        vGrille[i][j] = pGrille[i][j];
+                    }
+                    vPixelAffiche=true;
                 }
                 else {
-                    //System.out.println("PIXEL ROUGE");
-                    vGrille[i][j] = -10485760;
+                    vPixelAffiche=false;
                 }
             }
         }
@@ -279,19 +282,17 @@ Pour cela le programme utilise différentes focntions dan le but :
         aVerticalSeamTab = new int[aHauteurImage][2];
         plusFaibleCoutVertical();
         seamFinderVertical(aYmax,aXmax,-1);
-        /*for (int i=0;i<aHauteurImage;i++){
+        for (int i=0;i<aHauteurImage;i++){
             System.out.println("["+aVerticalSeamTab[i][0]+","+aVerticalSeamTab[i][1]+"]");
-        }*/
-        System.out.println("Hauteur : "+aHauteurImage);
-        System.out.println("aYmax :" + aYmax);
+        }
     }
 
     static void seamFinderVertical(int pL, int pC, int pCompteur){
         pCompteur+=1;
-        if ((pL==0) && (pC==0)){
+        /*if ((pL==0) && (pC==0)){
             System.out.print("(0,0)");
             return;
-        }
+        }*/
         int Mno=aInfini;
         int Mn=aInfini;
         int Mne=aInfini;
@@ -317,10 +318,6 @@ Pour cela le programme utilise différentes focntions dan le but :
         }
         aVerticalSeamTab[pCompteur] = new int[] {pL,pC};
 
-        if (pL==0){
-            aYmin=pL;
-            aXmin=pC;
-        }
     }
 
     static void plusFaibleCoutVertical(){
