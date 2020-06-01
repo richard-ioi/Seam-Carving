@@ -291,9 +291,9 @@ Pour cela le programme utilise différentes focntions dan le but :
         aVerticalSeamTab = new int[aHauteurImage][2];
         plusFaibleCoutVertical();
         seamFinderVertical(aYmaxVertical,aXmaxVertical,-1);
-        for (int i=0;i<aHauteurImage;i++){
+        /*for (int i=0;i<aHauteurImage;i++){
             System.out.println("["+aVerticalSeamTab[i][0]+","+aVerticalSeamTab[i][1]+"]");
-        }
+        }*/
     }
 
     static void seamFinderVertical(int pL, int pC, int pCompteur){
@@ -351,7 +351,7 @@ Pour cela le programme utilise différentes focntions dan le but :
 
                 Me=aCostTableHorizontal[l][c-1]+e(l,c-1,aGrille);
 
-                if((c+1>=pLargeurImage)||(l-1<0)) {
+                if((c-1<0)||(l+1>=pHauteurImage)) {
                     Mse = aInfini;
                 }
                 else {
@@ -410,10 +410,17 @@ Pour cela le programme utilise différentes focntions dan le but :
     }
 
     static void plusFaibleCoutHorizontal(){
-        int valeurMinV = IntStream.of(aCostTableHorizontal[aCostTableHorizontal.length-1]).min().getAsInt();
+        /*int valeurMinV = IntStream.of(aCostTableHorizontal[aCostTableHorizontal.length-1]).min().getAsInt();
         int[] vMax = new int[] {aCostTableHorizontal.length-1 , Arrays.asList(aCostTableHorizontal[aCostTableHorizontal.length-1]).indexOf(valeurMinV)};
         aYmaxHorizontal = vMax[0];
-        aXmaxHorizontal = vMax[1]+1;;
+        aXmaxHorizontal = vMax[1]+1;;*/
+        aXmaxHorizontal=aLargeurImage-1;
+        aYmaxHorizontal=0;
+        for (int i=0;i<aHauteurImage;i++){
+            if(aCostTableHorizontal[i][aXmaxHorizontal]<aCostTableHorizontal[aYmaxHorizontal][aXmaxHorizontal]){
+                aYmaxHorizontal=i;
+            }
+        }
     }
 
 }
