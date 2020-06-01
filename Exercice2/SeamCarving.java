@@ -219,7 +219,11 @@ Pour cela le programme utilise différentes focntions dan le but :
                         if (vPixelAfficheH==true){
                             vGrille[i][j] = pGrille[i][j];
                         }else{
-                            vGrille[i+1][j] = pGrille[i][j];
+                            if(i==0){
+                                vGrille[i][j] = pGrille[i][j];
+                            }else{
+                                vGrille[i-1][j-1] = pGrille[i][j];
+                            }
                         }
                     
                     }
