@@ -377,6 +377,7 @@ Pour cela le programme utilise différentes focntions dan le but :
         for (int i=0;i<aLargeurImage;i++){
             System.out.println("["+aHorizontalSeamTab[i][0]+","+aHorizontalSeamTab[i][1]+"]");
         }
+       // printTab(aCostTableHorizontal);
     }
 
     static void seamFinderHorizontal(int pL, int pC, int pCompteur){
@@ -416,10 +417,11 @@ Pour cela le programme utilise différentes focntions dan le but :
         aXmaxHorizontal = vMax[1]+1;;*/
         aXmaxHorizontal=aLargeurImage-1;
         aYmaxHorizontal=0;
-        for (int i=0;i<aHauteurImage;i++){
+        for (int i=0;i<aHauteurImage-1;i++){
             if(aCostTableHorizontal[i][aXmaxHorizontal]<aCostTableHorizontal[aYmaxHorizontal][aXmaxHorizontal]){
                 aYmaxHorizontal=i;
             }
+          //  System.out.println(aCostTableHorizontal[i][aXmaxHorizontal]);
         }
     }
 
