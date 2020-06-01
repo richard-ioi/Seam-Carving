@@ -134,30 +134,6 @@ Pour cela le programme utilise différentes focntions dan le but :
         return COLORTab;
     }
 
-    public static int getRGBPixel(String pColor, int pPixel){
-        Color vColor = new Color(pPixel);
-        if (pColor=="r"){
-            return vColor.getRed();
-        } else if (pColor=="g"){
-            return vColor.getGreen();
-        } else if (pColor=="b"){
-            return vColor.getBlue();
-        }
-        return 0;
-    }
-
-    public static int[][] getRGBTab(String pColor, BufferedImage pImage){
-        int pLargeurImage = pImage.getWidth();
-        int pHauteurImage = pImage.getHeight();
-        int[][]vRGBTab=new int[pHauteurImage][pLargeurImage];
-        for (int i=0 ; i<pHauteurImage ; i++){
-            for (int j=0 ; j<pLargeurImage ; j++){
-                vRGBTab[i][j]=getRGBPixel(pColor,getColorTab(pImage)[i][j]);
-            }
-        }
-        return vRGBTab;
-    }
-
     public static void printTab(int[][] pTab){
         for (int i=0;i<pTab.length-1;i++){
             for (int j=0;j<pTab[0].length;j++){
