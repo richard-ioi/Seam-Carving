@@ -411,15 +411,18 @@ Pour cela le programme utilise différentes focntions dan le but :
     }
 
     static void plusFaibleCoutHorizontal(){
-        /*int valeurMinV = IntStream.of(aCostTableHorizontal[aCostTableHorizontal.length-1]).min().getAsInt();
-        int[] vMax = new int[] {aCostTableHorizontal.length-1 , Arrays.asList(aCostTableHorizontal[aCostTableHorizontal.length-1]).indexOf(valeurMinV)};
-        aYmaxHorizontal = vMax[0];
-        aXmaxHorizontal = vMax[1]+1;;*/
+        /*int valeurMinV = IntStream.of(aCostTableHorizontal[aCostTableHorizontal[0].length-1]).min().getAsInt();
+        int[] vMax = new int[] {aCostTableHorizontal[0].length-1 , Arrays.asList(aCostTableHorizontal[aCostTableHorizontal[0].length-1]).indexOf(valeurMinV)};
+        aYmaxHorizontal = vMax[0]+1;
+        aXmaxHorizontal = vMax[1];*/
         aXmaxHorizontal=aLargeurImage-1;
         aYmaxHorizontal=0;
-        for (int i=0;i<aHauteurImage-1;i++){
+        for (int i=0;i<=aHauteurImage-1;i++){
             if(aCostTableHorizontal[i][aXmaxHorizontal]<aCostTableHorizontal[aYmaxHorizontal][aXmaxHorizontal]){
                 aYmaxHorizontal=i;
+            }
+            else{
+                System.out.println("NO");
             }
           //  System.out.println(aCostTableHorizontal[i][aXmaxHorizontal]);
         }
