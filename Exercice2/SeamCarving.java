@@ -178,9 +178,9 @@ Pour cela le programme utilise différentes focntions dan le but :
         }
         int indiceV = -1;
         int indiceH = -1;
-        for (int i=0 ; i<pGrille.length-1 ; i++){
-            for (int j=0 ; j<pGrille[0].length-1 ; j++){
-                if(pResizeVertical) {
+        if(pResizeVertical) {
+            for (int i=0 ; i<pGrille.length-1 ; i++){
+                for (int j=0 ; j<pGrille[0].length ; j++){
                     for (int k=0 ; k<aVerticalSeamTab.length ; k++) {
                         if(aVerticalSeamTab[k][0] == i && aVerticalSeamTab[k][1] == j) {
                             indiceV = k;
@@ -202,8 +202,13 @@ Pour cela le programme utilise différentes focntions dan le but :
                         vPixelAfficheV=false;
                     }
                 }
+                vPixelAfficheV=true;
+            }
+        }
 
-                if(pResizeHorizontal) {
+        if(pResizeHorizontal) {
+            for (int j=0 ; j<pGrille[0].length ; j++){
+                for (int i=0 ; i<pGrille.length-1 ; i++){
                     for (int l=0 ; l<aHorizontalSeamTab.length ; l++) {
                         if(aHorizontalSeamTab[l][0] == i && aHorizontalSeamTab[l][1] == j) {
                             indiceH = l;
@@ -219,7 +224,7 @@ Pour cela le programme utilise différentes focntions dan le but :
                         if (vPixelAfficheH==true){
                             vGrille[i][j] = pGrille[i][j];
                         }else{
-                            vGrille[i+1][j] = pGrille[i][j];
+                            vGrille[i-1][j] = pGrille[i][j];
                         }
                     
                     }
@@ -227,13 +232,8 @@ Pour cela le programme utilise différentes focntions dan le but :
                         vPixelAfficheH=false;
                     }
                 }
-                /*else {
-                    //System.out.println("PIXEL ROUGE");
-                    vGrille[i][j] = -10485760;
-                }*/
+                vPixelAfficheH=true;
             }
-            vPixelAfficheV=true;
-            vPixelAfficheH=true;
         }
         return vGrille;
     }
