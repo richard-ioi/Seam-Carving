@@ -96,7 +96,7 @@ public class SeamCarving{
                 System.out.println("HauteurIMAGE : " + aHauteurImage);
             }
             System.out.println("vResizeVertical: "+vResizeVertical+" vResizeHorizontal: "+vResizeHorizontal);
-            System.out.println("Pourcentage avancement :"+ aPourcentageAvancement+"%");
+            System.out.println("Pourcentage avancement : "+ aPourcentageAvancement+"%");
             creerImage(resizeGrille(aGrille,vResizeVertical,vResizeHorizontal));
             aImage = aResizedImage;
             System.out.println("");
@@ -326,7 +326,7 @@ public class SeamCarving{
         int Mse=0;
 
         for (int c=1 ; c<pLargeurImage ; c++){
-            for (int l=1 ; l<pHauteurImage ; l++){
+            for (int l=0 ; l<pHauteurImage ; l++){
 
                 Me=aCostTableHorizontal[l][c-1]+e(l,c-1,aGrille);
 
@@ -337,7 +337,7 @@ public class SeamCarving{
                     Mse=aCostTableHorizontal[l+1][c-1]+se(l+1,c-1,aGrille);
                 }
 
-                if(c-1 < 0) {
+                if((c-1 < 0)||(l-1<0)) {
                     Mne = aInfini;
                 }
                 else {
@@ -353,9 +353,9 @@ public class SeamCarving{
         aHorizontalSeamTab = new int[aLargeurImage][2];
         plusFaibleCoutHorizontal();
         seamFinderHorizontal(aYmaxHorizontal,aXmaxHorizontal,-1);
-        /*for (int i=0;i<aLargeurImage;i++){
+        for (int i=0;i<aLargeurImage;i++){
             System.out.print("["+aHorizontalSeamTab[i][0]+","+aHorizontalSeamTab[i][1]+"]");
-        }*/
+        }
        // printTab(aCostTableHorizontal);
     }
 
