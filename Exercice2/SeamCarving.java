@@ -412,6 +412,7 @@ Pour cela le programme utilise différentes focntions dan le but :
                 aYmaxHorizontal=i;
             }
         }
+        //test
     }
 
      //###GESTION DES IMAGES / FICHIERS ###//
