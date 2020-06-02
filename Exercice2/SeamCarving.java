@@ -9,15 +9,15 @@ import java.awt.image.*;
 import java.util.Arrays;
 
 public class SeamCarving{
-/*
-Cet algorithme correspond à l'exercice n°2 du projet de l'unité d'algorithmique du 2e semestre.
-Il permet, de redimensionner une image par la méthode du Seam Carving.
-Pour cela le programme utilise différentes focntions dan le but :
-    -> De charger une image à partir d'un fichier (placé en argument),
-    -> De lui appliquer un filtre par convolution pour obtenir "l'énergie" des différents pixels,
-    -> De déterminer les "seams" correspondant au chemins des pixels à l'énergie la plus faible,
-    -> De redimensionner l'image en retirant ces pixels moins importants et de créer un nouveau fichier png.
-*/
+    /*
+    Cet algorithme correspond à l'exercice n°2 du projet de l'unité d'algorithmique du 2e semestre.
+    Il permet, de redimensionner une image par la méthode du Seam Carving.
+    Pour cela le programme utilise différentes focntions dan le but :
+        -> De charger une image à partir d'un fichier (placé en argument),
+        -> De lui appliquer un filtre par convolution pour obtenir "l'énergie" des différents pixels,
+        -> De déterminer les "seams" correspondant au chemins des pixels à l'énergie la plus faible,
+        -> De redimensionner l'image en retirant ces pixels moins importants et de créer un nouveau fichier png.
+    */
 
     //###ATTRIBUTS###//
     public static final int aInfini = Integer.MAX_VALUE; // Constante l'infini qui nous sert plus tard, pour que la coccinelle ne sorte pas de la grille
@@ -412,7 +412,6 @@ Pour cela le programme utilise différentes focntions dan le but :
                 aYmaxHorizontal=i;
             }
         }
-        //test
     }
 
      //###GESTION DES IMAGES / FICHIERS ###//
