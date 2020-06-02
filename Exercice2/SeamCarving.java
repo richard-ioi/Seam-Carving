@@ -100,10 +100,10 @@ public class SeamCarving{
                 }
             }
 
-            System.out.println("\nCostTableHorizontal avant derniere ligne :");
+            /*System.out.println("\nCostTableHorizontal avant derniere ligne :");
             printTab(null , aCostTableHorizontal[aHauteurImage-1]);
             System.out.println("\nCostTableHorizontal derniere ligne :");
-            printTab(null , aCostTableHorizontal[aHauteurImage]);
+            printTab(null , aCostTableHorizontal[aHauteurImage]);*/
 
             System.out.println("Largeur actuelle : " + aLargeurImage + "px");
             System.out.println("Hauteur actuelle : " + aHauteurImage + "px");
@@ -353,7 +353,7 @@ public class SeamCarving{
                     Mse=aCostTableHorizontal[l+1][c-1]+se(l+1,c-1,aGrille);
                 }
 
-                if(l-1 < 0) {
+                if(l-1 < 0) {   // (Avant chagement): if((c-1 < 0)||(l-1<0)) {
                     Mne = aInfini;
                 }
                 else {
