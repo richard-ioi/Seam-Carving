@@ -64,7 +64,7 @@ public class SeamCarving{
                 if(aHauteurImage>aNewHauteurImage){
                     calculCostTableHorizontal(aEnergyImage,aLargeurImage,aHauteurImage);
                     calculSeamHorizontal();
-                    aHauteurImage = aHauteurImage-1;
+                    aHauteurImage-=1;
                     vResizeHorizontal=true;
                     vCompteurPourcentage+=1;
                 }
@@ -72,7 +72,7 @@ public class SeamCarving{
                 if((aLargeurImage>aNewLargeurImage)&&(vCompteurWhile%aOptimisation==0)){
                     calculCostTableVertical(aEnergyImage,aLargeurImage,aHauteurImage);
                     calculSeamVertical();
-                    aLargeurImage = aLargeurImage-1;
+                    aLargeurImage-=1;
                     vResizeVertical=true;
                     vCompteurPourcentage+=1;
                 }
@@ -81,7 +81,7 @@ public class SeamCarving{
                 if(aLargeurImage>aNewLargeurImage){
                     calculCostTableVertical(aEnergyImage,aLargeurImage,aHauteurImage);
                     calculSeamVertical();
-                    aLargeurImage = aLargeurImage-1;
+                    aLargeurImage-=1;
                     vResizeVertical=true;
                     vCompteurPourcentage+=1;
                 }
@@ -89,7 +89,7 @@ public class SeamCarving{
                 if((aHauteurImage>aNewHauteurImage)&&(vCompteurWhile%aOptimisation==0)){
                     calculCostTableHorizontal(aEnergyImage,aLargeurImage,aHauteurImage);
                     calculSeamHorizontal();
-                    aHauteurImage = aHauteurImage-1;
+                    aHauteurImage-=1;
                     vResizeHorizontal=true;
                     vCompteurPourcentage+=1;
                 }
@@ -149,7 +149,7 @@ public class SeamCarving{
                             }else{
                                 //System.out.println("i:"+i+" j:"+j);
                                 vGrille[i][j-1] = pGrille[i][j];
-                        }
+                            }
                         }
                     
                     }
