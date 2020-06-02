@@ -44,15 +44,19 @@ Pour cela le programme utilise différentes focntions dan le but :
     public static int aOptimisation;
     public static boolean aHauteurPlusGrand = false;
     public static boolean aLargeurPlusGrand = false;
+    public static float aPourcentageAvancement = 0;
 
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
         int vCompteurWhile=0;
+        int vCompteurPourcentage=0;
         boolean vResizeVertical;
         boolean vResizeHorizontal;
         Initialisation(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
+        int vNbSeams=(aLargeurImage-aNewLargeurImage)+(aHauteurImage-aNewHauteurImage);
         System.out.println("Nouvelle hauteur = "+aNewHauteurImage+"px, nouvelle largeur = "+aNewLargeurImage+"px");
         while( (aLargeurImage > aNewLargeurImage) || (aHauteurImage > aNewHauteurImage) ) {
+            aPourcentageAvancement = (vCompteurPourcentage*100)/vNbSeams;
             vResizeVertical=false;
             vResizeHorizontal=false;
             appliquerFiltre(aImage);
@@ -62,6 +66,7 @@ Pour cela le programme utilise différentes focntions dan le but :
                     calculSeamHorizontal();
                     aHauteurImage = aHauteurImage-1;
                     vResizeHorizontal=true;
+                    vCompteurPourcentage+=1;
                 }
                 System.out.println("HauteurIMAGE : " + aHauteurImage);
                 if((aLargeurImage>aNewLargeurImage)&&(vCompteurWhile%aOptimisation==0)){
@@ -69,6 +74,7 @@ Pour cela le programme utilise différentes focntions dan le but :
                     calculSeamVertical();
                     aLargeurImage = aLargeurImage-1;
                     vResizeVertical=true;
+                    vCompteurPourcentage+=1;
                 }
                 System.out.println("LargeurIMAGE : " + aLargeurImage);
             }else if(aLargeurPlusGrand){
@@ -77,6 +83,7 @@ Pour cela le programme utilise différentes focntions dan le but :
                     calculSeamVertical();
                     aLargeurImage = aLargeurImage-1;
                     vResizeVertical=true;
+                    vCompteurPourcentage+=1;
                 }
                 System.out.println("LargeurIMAGE : " + aLargeurImage);
                 if((aHauteurImage>aNewHauteurImage)&&(vCompteurWhile%aOptimisation==0)){
@@ -84,15 +91,18 @@ Pour cela le programme utilise différentes focntions dan le but :
                     calculSeamHorizontal();
                     aHauteurImage = aHauteurImage-1;
                     vResizeHorizontal=true;
+                    vCompteurPourcentage+=1;
                 }
                 System.out.println("HauteurIMAGE : " + aHauteurImage);
             }
             System.out.println("vResizeVertical: "+vResizeVertical+" vResizeHorizontal: "+vResizeHorizontal);
+            System.out.println("Pourcentage avancement :"+ aPourcentageAvancement+"%");
             creerImage(resizeGrille(aGrille,vResizeVertical,vResizeHorizontal));
             aImage = aResizedImage;
             System.out.println("");
             vCompteurWhile+=1;
         }
+        System.out.println("Pourcentage avancement : 100%");
         creerImage(aGrille);
         creerFichier();
     }
@@ -156,7 +166,7 @@ Pour cela le programme utilise différentes focntions dan le but :
                             if(i==0){
                                 vGrille[i][j] = pGrille[i][j];
                             }else{
-                                vGrille[i-1][j-1] = pGrille[i][j];
+                                vGrille[i-1][j] = pGrille[i][j];
                             }
                         }
                     
