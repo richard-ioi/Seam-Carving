@@ -116,7 +116,7 @@ public class SeamCarving{
         int[][] vGrille = new int[pGrille.length][pGrille[0].length];
         if(pResizeVertical && pResizeHorizontal) {
             vGrille = new int[pGrille.length-1][pGrille[0].length-1];
-            doubleResize = -1;
+            doubleResize = -2;
         }else if(pResizeVertical) {
             vGrille = new int[pGrille.length][pGrille[0].length-1];
             doubleResize = 0;
@@ -126,35 +126,31 @@ public class SeamCarving{
         }
         int indiceV = -1;
         int indiceH = -1;
-        System.out.println("doubleResize = "+doubleResize);
+        //System.out.println("doubleResize = "+doubleResize);
         if(pResizeVertical) {
             //vGrille = new int[pGrille.length][pGrille[0].length-1];
-            for (int i=0 ; i<pGrille.length-doubleResize ; i++){
-                for (int j=0 ; j<pGrille[0].length-1 ; j++){
+            for (int i=0 ; i<vGrille.length ; i++){
+                for (int j=0 ; j<vGrille[0].length ; j++){
                     for (int k=0 ; k<aVerticalSeamTab.length ; k++) {
                         if(aVerticalSeamTab[k][0] == i && aVerticalSeamTab[k][1] == j) {
                             indiceV = k;
+                            vPixelAfficheV=false;
                             break;
                         }
                         else {
                             indiceV = -1;
                         }
                     }
-                    if( indiceV == -1 ) {
-                        if (vPixelAfficheV==true){
-                            vGrille[i][j] = pGrille[i][j];
-                        }else{
-                            if(j==0){
-                                vGrille[i][j] = pGrille[i][j];
-                            }else{
-                                //System.out.println("i:"+i+" j:"+j);
-                                vGrille[i][j-1] = pGrille[i][j];
-                            }
-                        }
-                    
+                    if( indiceV == -1 && vPixelAfficheV==true) {
+                        vGrille[i][j] = pGrille[i][j];
                     }
                     else {
-                        vPixelAfficheV=false;
+                        vGrille[i][j] = pGrille[i][j+1];
+                        /*try{
+                            vGrille[i][j] = pGrille[i][j+1];
+                        }catch(java.lang.ArrayIndexOutOfBoundsException e ){
+                            System.out.println("i:"+i+" j:"+j+" Taille vGrille:"+vGrille.length+","+vGrille[0].length+" Taille pGrille:"+pGrille.length+","+pGrille[0].length);
+                        }*/
                     }
                 }
                 vPixelAfficheV=true;
@@ -163,34 +159,23 @@ public class SeamCarving{
 
         if(pResizeHorizontal) {
             //vGrille = new int[pGrille.length-1][pGrille[0].length];
-            for (int j=0 ; j<pGrille[0].length-doubleResize ; j++){
-                for (int i=0 ; i<pGrille.length-1 ;i++){
+            for (int j=0 ; j<vGrille[0].length ; j++){
+                for (int i=0 ; i<vGrille.length ;i++){
                     for (int l=0 ; l<aHorizontalSeamTab.length ; l++) {
                         if(aHorizontalSeamTab[l][0] == i && aHorizontalSeamTab[l][1] == j) {
                             indiceH = l;
+                            vPixelAfficheH=false;
                             break;
                         }
                         else {
                             indiceH = -1;
                         }
                     }
-                    //System.out.print(indice+" ");
-                    
-                    if( indiceH == -1 ) {
-                        if (vPixelAfficheH==true){
-                            vGrille[i][j] = pGrille[i][j];
-                        }else{
-                            if(i==0){
-                                vGrille[i][j] = pGrille[i][j];
-                            }else{
-                                //System.out.println("i:"+i+" j:"+j);
-                                vGrille[i-1][j] = pGrille[i][j];
-                            }
-                        }
-                    
+                    if( indiceH == -1 && vPixelAfficheH==true) {
+                        vGrille[i][j] = pGrille[i][j];
                     }
                     else {
-                        vPixelAfficheH=false;
+                        vGrille[i][j] = pGrille[i+1][j];
                     }
                     /*else {
                         //System.out.println("PIXEL ROUGE");
