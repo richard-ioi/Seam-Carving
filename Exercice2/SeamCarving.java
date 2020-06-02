@@ -6,8 +6,6 @@ import java.util.stream.IntStream;
 import javax.imageio.*;
 import java.awt.Color;
 import java.awt.image.*;
-//import java.awt.image.ConvolveOp;
-//import java.awt.image.Kernel;
 import java.util.Arrays;
 
 public class SeamCarving{
@@ -43,127 +41,63 @@ Pour cela le programme utilise différentes focntions dan le but :
     public static int aPlusFaibleCoutVertical;
     public static int[][] aVerticalSeamTab;
     public static int[][] aHorizontalSeamTab;
+    public static int aOptimisation;
+    public static boolean aHauteurPlusGrand = false;
+    public static boolean aLargeurPlusGrand = false;
 
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
+        int vCompteurWhile=0;
+        boolean vResizeVertical;
+        boolean vResizeHorizontal;
         Initialisation(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
         System.out.println("Nouvelle hauteur = "+aNewHauteurImage+"px, nouvelle largeur = "+aNewLargeurImage+"px");
         while( (aLargeurImage > aNewLargeurImage) || (aHauteurImage > aNewHauteurImage) ) {
+            vResizeVertical=false;
+            vResizeHorizontal=false;
             appliquerFiltre(aImage);
-            System.out.println(""+(aLargeurImage>aNewLargeurImage)+" "+(aHauteurImage>aNewHauteurImage));
-            if(aLargeurImage>aNewLargeurImage){
-                calculCostTableVertical(aEnergyImage,aLargeurImage,aHauteurImage);
-                calculSeamVertical();
-                aLargeurImage = aLargeurImage-1;
+            if(aHauteurPlusGrand){
+                if(aHauteurImage>aNewHauteurImage){
+                    calculCostTableHorizontal(aEnergyImage,aLargeurImage,aHauteurImage);
+                    calculSeamHorizontal();
+                    aHauteurImage = aHauteurImage-1;
+                    vResizeHorizontal=true;
+                }
+                System.out.println("HauteurIMAGE : " + aHauteurImage);
+                if((aLargeurImage>aNewLargeurImage)&&(vCompteurWhile%aOptimisation==0)){
+                    calculCostTableVertical(aEnergyImage,aLargeurImage,aHauteurImage);
+                    calculSeamVertical();
+                    aLargeurImage = aLargeurImage-1;
+                    vResizeVertical=true;
+                }
+                System.out.println("LargeurIMAGE : " + aLargeurImage);
+            }else if(aLargeurPlusGrand){
+                if(aLargeurImage>aNewLargeurImage){
+                    calculCostTableVertical(aEnergyImage,aLargeurImage,aHauteurImage);
+                    calculSeamVertical();
+                    aLargeurImage = aLargeurImage-1;
+                    vResizeVertical=true;
+                }
+                System.out.println("LargeurIMAGE : " + aLargeurImage);
+                if((aHauteurImage>aNewHauteurImage)&&(vCompteurWhile%aOptimisation==0)){
+                    calculCostTableHorizontal(aEnergyImage,aLargeurImage,aHauteurImage);
+                    calculSeamHorizontal();
+                    aHauteurImage = aHauteurImage-1;
+                    vResizeHorizontal=true;
+                }
+                System.out.println("HauteurIMAGE : " + aHauteurImage);
             }
-            System.out.println("LargeurIMAGE : " + aLargeurImage);
-            if(aHauteurImage>aNewHauteurImage){
-                calculCostTableHorizontal(aEnergyImage,aLargeurImage,aHauteurImage);
-                //printTab(aCostTableHorizontal);
-                calculSeamHorizontal();
-                aHauteurImage = aHauteurImage-1;
-            }
-            System.out.println("HauteurIMAGE : " + aHauteurImage);
-            creerImage(resizeGrille(aGrille,(aLargeurImage>aNewLargeurImage),(aHauteurImage>aNewHauteurImage)));
+            System.out.println("vResizeVertical: "+vResizeVertical+" vResizeHorizontal: "+vResizeHorizontal);
+            creerImage(resizeGrille(aGrille,vResizeVertical,vResizeHorizontal));
             aImage = aResizedImage;
             System.out.println("");
+            vCompteurWhile+=1;
         }
         creerImage(aGrille);
         creerFichier();
     }
 
-    //###FONCTIONS ESSENTIELLES###//
-
-    public static void Initialisation (final String pNom, final int pPourcentageVertical, final int pPourcentageHorizontal){
-        try{
-            aNomImage=pNom;
-            aPourcentageHorizontal = pPourcentageHorizontal;
-            aPourcentageVertical = pPourcentageVertical;
-            chargerImage("images/"+aNomImage);
-            aNewHauteurImage = (int)(aHauteurImage-(aHauteurImage*(aPourcentageVertical)/100));
-            aNewLargeurImage = (int)(aLargeurImage-(aLargeurImage*(aPourcentageHorizontal)/100));
-            System.out.println("L'image doit être réduite de "+aPourcentageVertical+"% en hauteur et "+aPourcentageHorizontal+"% en largeur");
-        }
-        catch (Exception e){
-            System.out.println("ERREUR ! La commande a été mal introduite.");
-            System.out.println("Vérifiez que vous avez bien tapé la commande comme suit :");
-            System.out.println("java SeamCarving nomfichier.png %NouvelleLargeur %NouvelleHauteur");
-        }
-
-    }
-
-    //###GESTION DES IMAGES / FICHIERS ###//
-
-    public static void chargerImage(String pFileName){
-        try{
-            aImage = ImageIO.read(new File(pFileName));
-            aHauteurImage = aImage.getHeight();
-            aLargeurImage = aImage.getWidth();
-            System.out.println("L'image s'est bien chargée");
-            System.out.println("Le nom de l'image est : "+aNomImage);
-            System.out.println("Hauteur de l'image : "+aHauteurImage+"px, Largeur de l'image : "+aLargeurImage+"px");
-        }
-        catch (IOException e){
-            System.out.println("L'image ne s'est pas chargée, vérifiez le nom.");
-        }
-    }
-
-    public static void creerImage(int[][] pGrille){
-        aResizedImage = new BufferedImage(pGrille[0].length, pGrille.length, BufferedImage.TYPE_INT_RGB);
-        for (int i=0;i<pGrille.length-1;i++){
-            for (int j=0;j<pGrille[0].length;j++){
-                aResizedImage.setRGB(j,i,pGrille[i][j]);
-            }
-        }
-    }
-
-    public static void creerFichier(){
-        try{
-            ImageIO.write(aResizedImage, "PNG", new File("resized_images/resized_"+aNomImage));
-        }
-        catch (IOException e){
-        }
-    }
-
-    public static int[][] getColorTab(BufferedImage pImage){
-        int pLargeurImage = pImage.getWidth();
-        int pHauteurImage = pImage.getHeight();
-        int[][] COLORTab = new int[pHauteurImage][pLargeurImage];
-        for (int i=0;i<pHauteurImage;i++){
-            for (int j=0;j<pLargeurImage;j++){
-                COLORTab[i][j]=pImage.getRGB(j,i);
-            }
-        }
-        return COLORTab;
-    }
-
-    public static void printTab(int[][] pTab){
-        for (int i=0;i<pTab.length-1;i++){
-            for (int j=0;j<pTab[0].length;j++){
-                System.out.print(pTab[i][j]+" ");
-            }
-            System.out.println(" ");
-        }
-    }
-
-    //###ANALYSE DE L'IMAGE###//
-    
-    public static void appliquerFiltre(BufferedImage pImage) {
-
-        /* Définition de la première convolution */
-        Kernel kernel1 = new Kernel(3, 3, new float[]{1f, 0f, -1f, 2f, 0f, -2f, 1f, 0f, -1f});
-        ConvolveOp convolution1 = new ConvolveOp(kernel1);
-        BufferedImage resultatIntermediaire = convolution1.filter(pImage, null);
-
-        Kernel kernel2 = new Kernel(3, 3, new float[]{1f, 2f, 1f, 0f, 0f, 0f, -1f, -2f, -1f});
-        ConvolveOp convolution2 = new ConvolveOp(kernel2);
-
-        /*
-        Kernel kernel = new Kernel(3, 3, new float[]{0f,1f,0f, 1f,-4f,1f, 0f,1f,0f});
-        ConvolveOp convolution = new ConvolveOp(kernel);*/
-
-        aEnergyImage = convolution2.filter(resultatIntermediaire, null);
-    }
+    //###ALGORITHMES DES IMAGES / TABLEAUX###//
 
     public static int[][] resizeGrille(int[][] pGrille, boolean pResizeVertical, boolean pResizeHorizontal) {
         boolean vPixelAfficheV = true;
@@ -241,7 +175,6 @@ Pour cela le programme utilise différentes focntions dan le but :
         }
         return vGrille;
     }
-
     
     /*
      Fonction qui calcule le coût des déplacements Nord-Ouest
@@ -425,19 +358,19 @@ Pour cela le programme utilise différentes focntions dan le but :
             Me=aCostTableHorizontal[pL][pC-1]+e(pL,pC-1,aGrille);
         }
         if((pL-1>=0) && (pC-1>=0)){
-            Mne=aCostTableVertical[pL-1][pC-1]+ne(pL-1,pC-1,aGrille);
+            Mne=aCostTableHorizontal[pL-1][pC-1]+ne(pL-1,pC-1,aGrille);
         }
         if((pL+1<aHauteurImage) && (pC-1>=0)){
             Mse=aCostTableHorizontal[pL+1][pC-1]+se(pL+1,pC-1,aGrille);
         }
 
-        if(aCostTableVertical[pL][pC] == Me){
+        if(aCostTableHorizontal[pL][pC] == Me){
             seamFinderHorizontal(pL,pC-1,pCompteur);
         } 
-        else if (aCostTableVertical[pL][pC]==Mne){
+        else if (aCostTableHorizontal[pL][pC]==Mne){
             seamFinderHorizontal(pL-1,pC-1,pCompteur);
         }
-        else if (aCostTableVertical[pL][pC]==Mse){
+        else if (aCostTableHorizontal[pL][pC]==Mse){
             seamFinderHorizontal(pL+1,pC-1,pCompteur);
         }
         aHorizontalSeamTab[pCompteur] = new int[] {pL,pC};
@@ -463,4 +396,99 @@ Pour cela le programme utilise différentes focntions dan le but :
         }
     }
 
+     //###GESTION DES IMAGES / FICHIERS ###//
+
+     public static void Initialisation (final String pNom, final int pPourcentageVertical, final int pPourcentageHorizontal){
+        try{
+            aNomImage=pNom;
+            aPourcentageHorizontal = pPourcentageHorizontal;
+            aPourcentageVertical = pPourcentageVertical;
+            chargerImage("images/"+aNomImage);
+            aNewHauteurImage = (int)(aHauteurImage-(aHauteurImage*(aPourcentageVertical)/100));
+            aNewLargeurImage = (int)(aLargeurImage-(aLargeurImage*(aPourcentageHorizontal)/100));
+            System.out.println("L'image doit être réduite de "+aPourcentageVertical+"% en hauteur et "+aPourcentageHorizontal+"% en largeur");
+            if((aHauteurImage-aNewHauteurImage)>(aLargeurImage-aNewLargeurImage)){
+                aHauteurPlusGrand = true;
+                aOptimisation = (int)((aHauteurImage-aNewHauteurImage)/(aLargeurImage-aNewLargeurImage));
+            } else if ((aHauteurImage-aNewHauteurImage)<=(aLargeurImage-aNewLargeurImage)){
+                aLargeurPlusGrand = true;
+                aOptimisation = (int)((aLargeurImage-aNewLargeurImage)/(aHauteurImage-aNewHauteurImage));
+            }
+        }
+        catch (Exception e){
+            System.out.println("ERREUR ! La commande a été mal introduite.");
+            System.out.println("Vérifiez que vous avez bien tapé la commande comme suit :");
+            System.out.println("java SeamCarving nomfichier.png %NouvelleLargeur %NouvelleHauteur");
+        }
+
+    }
+
+    public static void chargerImage(String pFileName){
+        try{
+            aImage = ImageIO.read(new File(pFileName));
+            aHauteurImage = aImage.getHeight();
+            aLargeurImage = aImage.getWidth();
+            System.out.println("L'image s'est bien chargée");
+            System.out.println("Le nom de l'image est : "+aNomImage);
+            System.out.println("Hauteur de l'image : "+aHauteurImage+"px, Largeur de l'image : "+aLargeurImage+"px");
+        }
+        catch (IOException e){
+            System.out.println("L'image ne s'est pas chargée, vérifiez le nom.");
+        }
+    }
+
+    public static void creerImage(int[][] pGrille){
+        aResizedImage = new BufferedImage(pGrille[0].length, pGrille.length, BufferedImage.TYPE_INT_RGB);
+        for (int i=0;i<pGrille.length-1;i++){
+            for (int j=0;j<pGrille[0].length;j++){
+                aResizedImage.setRGB(j,i,pGrille[i][j]);
+            }
+        }
+    }
+
+    public static void creerFichier(){
+        try{
+            ImageIO.write(aResizedImage, "PNG", new File("resized_images/resized_"+aNomImage));
+        }
+        catch (IOException e){
+        }
+    }
+
+    public static int[][] getColorTab(BufferedImage pImage){
+        int pLargeurImage = pImage.getWidth();
+        int pHauteurImage = pImage.getHeight();
+        int[][] COLORTab = new int[pHauteurImage][pLargeurImage];
+        for (int i=0;i<pHauteurImage;i++){
+            for (int j=0;j<pLargeurImage;j++){
+                COLORTab[i][j]=pImage.getRGB(j,i);
+            }
+        }
+        return COLORTab;
+    }
+
+    public static void printTab(int[][] pTab){
+        for (int i=0;i<pTab.length-1;i++){
+            for (int j=0;j<pTab[0].length;j++){
+                System.out.print(pTab[i][j]+" ");
+            }
+            System.out.println(" ");
+        }
+    }
+
+    public static void appliquerFiltre(BufferedImage pImage) {
+
+        /* Définition de la première convolution */
+        Kernel kernel1 = new Kernel(3, 3, new float[]{1f, 0f, -1f, 2f, 0f, -2f, 1f, 0f, -1f});
+        ConvolveOp convolution1 = new ConvolveOp(kernel1);
+        BufferedImage resultatIntermediaire = convolution1.filter(pImage, null);
+
+        Kernel kernel2 = new Kernel(3, 3, new float[]{1f, 2f, 1f, 0f, 0f, 0f, -1f, -2f, -1f});
+        ConvolveOp convolution2 = new ConvolveOp(kernel2);
+
+        /*
+        Kernel kernel = new Kernel(3, 3, new float[]{0f,1f,0f, 1f,-4f,1f, 0f,1f,0f});
+        ConvolveOp convolution = new ConvolveOp(kernel);*/
+
+        aEnergyImage = convolution2.filter(resultatIntermediaire, null);
+    }
 }
