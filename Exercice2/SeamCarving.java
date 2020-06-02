@@ -112,19 +112,25 @@ Pour cela le programme utilise différentes focntions dan le but :
     public static int[][] resizeGrille(int[][] pGrille, boolean pResizeVertical, boolean pResizeHorizontal) {
         boolean vPixelAfficheV = true;
         boolean vPixelAfficheH = true;
+        int doubleResize = 0;
         int[][] vGrille = new int[pGrille.length][pGrille[0].length];
         if(pResizeVertical && pResizeHorizontal) {
             vGrille = new int[pGrille.length-1][pGrille[0].length-1];
+            doubleResize = -1;
         }else if(pResizeVertical) {
             vGrille = new int[pGrille.length][pGrille[0].length-1];
+            doubleResize = 0;
         }else if(pResizeHorizontal) {
             vGrille = new int[pGrille.length-1][pGrille[0].length];
+            doubleResize = 0;
         }
         int indiceV = -1;
         int indiceH = -1;
-        for (int i=0 ; i<pGrille.length-1 ; i++){
-            for (int j=0 ; j<pGrille[0].length-1 ; j++){
-                if(pResizeVertical) {
+        System.out.println("doubleResize = "+doubleResize);
+        if(pResizeVertical) {
+            //vGrille = new int[pGrille.length][pGrille[0].length-1];
+            for (int i=0 ; i<pGrille.length-doubleResize ; i++){
+                for (int j=0 ; j<pGrille[0].length-1 ; j++){
                     for (int k=0 ; k<aVerticalSeamTab.length ; k++) {
                         if(aVerticalSeamTab[k][0] == i && aVerticalSeamTab[k][1] == j) {
                             indiceV = k;
@@ -138,7 +144,12 @@ Pour cela le programme utilise différentes focntions dan le but :
                         if (vPixelAfficheV==true){
                             vGrille[i][j] = pGrille[i][j];
                         }else{
-                            vGrille[i][j-1] = pGrille[i][j];
+                            if(j==0){
+                                vGrille[i][j] = pGrille[i][j];
+                            }else{
+                                //System.out.println("i:"+i+" j:"+j);
+                                vGrille[i][j-1] = pGrille[i][j];
+                        }
                         }
                     
                     }
@@ -146,8 +157,14 @@ Pour cela le programme utilise différentes focntions dan le but :
                         vPixelAfficheV=false;
                     }
                 }
+                vPixelAfficheV=true;
+            }
+        }
 
-                if(pResizeHorizontal) {
+        if(pResizeHorizontal) {
+            //vGrille = new int[pGrille.length-1][pGrille[0].length];
+            for (int j=0 ; j<pGrille[0].length-doubleResize ; j++){
+                for (int i=0 ; i<pGrille.length-1 ;i++){
                     for (int l=0 ; l<aHorizontalSeamTab.length ; l++) {
                         if(aHorizontalSeamTab[l][0] == i && aHorizontalSeamTab[l][1] == j) {
                             indiceH = l;
@@ -166,6 +183,7 @@ Pour cela le programme utilise différentes focntions dan le but :
                             if(i==0){
                                 vGrille[i][j] = pGrille[i][j];
                             }else{
+                                //System.out.println("i:"+i+" j:"+j);
                                 vGrille[i-1][j] = pGrille[i][j];
                             }
                         }
@@ -174,14 +192,13 @@ Pour cela le programme utilise différentes focntions dan le but :
                     else {
                         vPixelAfficheH=false;
                     }
+                    /*else {
+                        //System.out.println("PIXEL ROUGE");
+                        vGrille[i][j] = -10485760;
+                    }*/
                 }
-                /*else {
-                    //System.out.println("PIXEL ROUGE");
-                    vGrille[i][j] = -10485760;
-                }*/
+                vPixelAfficheH=true;
             }
-            vPixelAfficheV=true;
-            vPixelAfficheH=true;
         }
         return vGrille;
     }
