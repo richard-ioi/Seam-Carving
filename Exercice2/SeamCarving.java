@@ -57,8 +57,8 @@ public class SeamCarving{
         int vNbSeams=(aLargeurImage-aNewLargeurImage)+(aHauteurImage-aNewHauteurImage);
         System.out.println("\nNouvelle hauteur = "+aNewHauteurImage+"px, nouvelle largeur = "+aNewLargeurImage+"px\n");
         
-        aNewLargeurImage = aLargeurImage-2;
-        aNewHauteurImage = aHauteurImage-2;
+        aNewLargeurImage = aLargeurImage-7;
+        aNewHauteurImage = aHauteurImage-7;
         
         while( (aLargeurImage > aNewLargeurImage) || (aHauteurImage > aNewHauteurImage) ) {
             aPourcentageAvancement = (vCompteurPourcentage*100)/vNbSeams;
@@ -206,7 +206,7 @@ public class SeamCarving{
      Fonction qui calcule le coût des déplacements Nord-Ouest
     */
     public static int no(int pL, int pC, int[][] pGrille){
-        if (pC-1<0 || pL+1>=pGrille.length){
+        if (pC-1<0 || pL+1>=aHauteurImage){
             return aInfini;
         }else{
             return pGrille[pL+1][pC-1];
@@ -224,7 +224,7 @@ public class SeamCarving{
     Fonction qui calcule le coût des déplacements Nord-Est
     */
     public static int ne(int pL, int pC, int[][] pGrille){
-        if (pC+1>=pGrille[0].length || pL+1>=pGrille.length){
+        if (pC+1>=aLargeurImage || pL+1>=aHauteurImage){
             return aInfini;
         }else{
             return pGrille[pL+1][pC+1];
@@ -236,7 +236,7 @@ public class SeamCarving{
     }
 
     public static int se(int pL, int pC, int[][] pGrille){
-        if (pC+1>=pGrille[0].length || pL-1<0){
+        if (pC+1>=aLargeurImage || pL-1<0){
             return aInfini;
         }else{
             return pGrille[pL-1][pC+1];
