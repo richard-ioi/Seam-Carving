@@ -22,10 +22,12 @@ Le programme utilise différentes fonctions dans le but :
     public static int aLplusGrand=0; // Coordonnée L du tableau correspondant au terme m(l,c).
     public static int aCplusGrand=0; // Coordonnée C du tableau correspondant au terme m(l,c).
     public static int aPlusGrandNombre=0; // Nombre maximum de  pucerons mangés
+    public static int aPlusGrandNombreHorizontal=0; // Nombre maximum de  pucerons mangés
     public static int aLAterrissage=0; // Coordonnée L de la case atterrissage
     public static int aCAterrissage=0; // Coordonnée C de la case atterissage
     public static int aLInterview=0; // Coordonnée L de la case interview
     public static int aCInterview=0; // Coordonnée C de la case interview
+    public static int[][] MHorizontal = new int [aL][aC];
     
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
@@ -48,6 +50,22 @@ Le programme utilise différentes fonctions dans le but :
         System.out.println("\nLa coccinelle a mangé "+aPlusGrandNombre+" pucerons");
         System.out.println("Le chemin suivit par la coccinelle est le suivant :");
         accm(aLplusGrand,aCplusGrand,aGrille); // Détermine le chemin que la coccinelle emprunte pour manger le plus grand nombre de pucerons
+                                               // En mettant en paramètre les coordonnées de la case sur laquelle on atteint le plus grand nombre de pucerons dévorés
+        System.out.println("\nCase d'atterrissage = ("+aLAterrissage+","+aCAterrissage+").");
+        System.out.println("Case de l'interview = ("+aLInterview+","+aCInterview+").");
+        System.out.println("");
+
+        System.out.println("######");
+
+        System.out.println("\nGrille représentant les pucerons au départ :");
+        afficheTab(aGrille); // Affiche la grille dans le bon ordre
+        calculerMHorizontal(aGrille); // Calcule le tableau M de terme général m(l,c), nombre maximum de pucerons de aGrille.
+        System.out.println("\nTableau M[L][C] de terme général M[l][c] = m(l,c) représentant le nb max de pucerons mangés :");
+        afficheTab(MHorizontal); // Affiche le tableau M dans le bon ordre
+        plusGrandNombrePuceronHorizontal(); // Détermine la case sur laquelle on atteint le plus grand nombre de pucerons dévorés.
+        System.out.println("\nLa coccinelle a mangé "+aPlusGrandNombreHorizontal+" pucerons");
+        System.out.println("Le chemin suivit par la coccinelle est le suivant :");
+        accmHorizontal(aLplusGrand,aCplusGrand,aGrille); // Détermine le chemin que la coccinelle emprunte pour manger le plus grand nombre de pucerons
                                                // En mettant en paramètre les coordonnées de la case sur laquelle on atteint le plus grand nombre de pucerons dévorés
         System.out.println("\nCase d'atterrissage = ("+aLAterrissage+","+aCAterrissage+").");
         System.out.println("Case de l'interview = ("+aLInterview+","+aCInterview+").");
@@ -102,6 +120,18 @@ Le programme utilise différentes fonctions dans le but :
         }
     }
 
+    public static int e(int pL, int pC, int[][] pGrille){
+        return pGrille[pL][pC+1];
+    }
+
+    public static int se(int pL, int pC, int[][] pGrille){
+        if (pC+1>=aC || pL-1<0){
+            return aInfiniNeg;
+        }else{
+            return pGrille[pL-1][pC+1];
+        }
+    }
+
     /*
     Fonction qui calcule le nombre maximum de pucerons atteints pour chaque case
     */
@@ -137,6 +167,39 @@ Le programme utilise différentes fonctions dans le but :
             }
         }
     }
+    
+    public static void calculerMHorizontal(int[][] pGrille){
+        for (int i=0; i<aL;i++){
+            MHorizontal[i][0]=pGrille[i][0];
+        }
+
+        int Mne=0;
+        int Me=0;
+        int Mse=0;
+
+        for (int c=1;c<aC;c++){
+            for (int l=0;l<aL;l++){
+
+                if(l-1 < 0) {
+                    Mne = aInfiniNeg;
+                }
+                else {
+                    Mne=MHorizontal[l-1][c-1]+ne(l-1,c-1,pGrille);
+                }
+
+                Me=MHorizontal[l][c-1]+e(l,c-1,pGrille);
+
+                if(l+1 >= aL) {
+                    Mse = aInfiniNeg;
+                }
+                else {
+                    Mse=MHorizontal[l+1][c-1]+se(l+1,c-1,pGrille);
+                }
+
+                MHorizontal[l][c]= (int)Math.max(Mne, (int)Math.max(Me,Mse));
+            }
+        }
+    }
 
     /*
     Fonction qui détermine le plus grand nombre de pucerons consommés possible et 
@@ -147,6 +210,18 @@ Le programme utilise différentes fonctions dans le but :
             for (int c=0; c<aC;c++){
                 if (M[l][c]>aPlusGrandNombre){
                     aPlusGrandNombre=M[l][c];
+                    aLplusGrand=l;
+                    aCplusGrand=c;
+                }
+            }
+        }
+    }
+    
+    static void plusGrandNombrePuceronHorizontal(){
+        for (int l=0; l<aL;l++){
+            for (int c=0; c<aC;c++){
+                if (MHorizontal[l][c]>aPlusGrandNombreHorizontal){
+                    aPlusGrandNombreHorizontal=MHorizontal[l][c];
                     aLplusGrand=l;
                     aCplusGrand=c;
                 }
@@ -193,6 +268,45 @@ Le programme utilise différentes fonctions dans le but :
             aLInterview=pL;
             aCInterview=pC;
         } else if (pL==0){
+            aLAterrissage=pL;
+            aCAterrissage=pC;
+        }
+    }
+
+    static void accmHorizontal(int pL, int pC, int[][]pGrille){
+        if ((pL==0) && (pC==0)){
+            System.out.print("(0,0)");
+            return;
+        }
+        int Mne=aInfiniNeg;
+        int Me=aInfiniNeg;
+        int Mse=aInfiniNeg;
+
+        if((pC-1>=0)){
+            Me=MHorizontal[pL][pC-1]+e(pL,pC-1,pGrille);
+        }
+        if((pL+1<aL) && (pC-1>=0)){
+            Mse=MHorizontal[pL+1][pC-1]+se(pL+1,pC-1,pGrille);
+        }
+        if((pL-1>=0) && (pC-1>=0)){
+            Mne=MHorizontal[pL-1][pC-1]+ne(pL-1,pC-1,pGrille);
+        }
+
+        if(MHorizontal[pL][pC] == Me){
+            accmHorizontal(pL,pC-1,pGrille);
+        } 
+        else if (MHorizontal[pL][pC]==Mse){
+            accmHorizontal(pL+1,pC-1,pGrille);
+        }
+        else if (MHorizontal[pL][pC]==Mne){
+            accmHorizontal(pL-1,pC-1,pGrille);
+        }
+        System.out.printf("(%d,%d)",pL,pC);
+
+        if (pC==aC-1){
+            aLInterview=pL;
+            aCInterview=pC;
+        } else if (pC==0){
             aLAterrissage=pL;
             aCAterrissage=pC;
         }

@@ -33,6 +33,7 @@ public class SeamCarving{
     public static int aNewLargeurImage;
     public static int aNewHauteurImage;
     public static int[][] aGrille;
+    public static int[][] aEnergyGrille;
     public static int[][] aCostTableVertical;
     public static int[][] aCostTableHorizontal;
     public static int aXmaxVertical;
@@ -57,15 +58,18 @@ public class SeamCarving{
         int vNbSeams=(aLargeurImage-aNewLargeurImage)+(aHauteurImage-aNewHauteurImage);
         System.out.println("\nNouvelle hauteur = "+aNewHauteurImage+"px, nouvelle largeur = "+aNewLargeurImage+"px\n");
         
-        //aNewLargeurImage = aLargeurImage-7;
-        //aNewHauteurImage = aHauteurImage-7;
+        //aNewLargeurImage = aLargeurImage+1;
+        //aNewHauteurImage = aHauteurImage+1;
+
+        //aGrille = new int[aHauteurImage][aLargeurImage];
         
         while( (aLargeurImage > aNewLargeurImage) || (aHauteurImage > aNewHauteurImage) ) {
             aPourcentageAvancement = (vCompteurPourcentage*100)/vNbSeams;
             vResizeVertical=false;
             vResizeHorizontal=false;
+            aGrille = getColorTab(aImage);
             if(aHauteurPlusGrand){
-                if(aHauteurImage>aNewHauteurImage){
+                if(aHauteurImage > aNewHauteurImage){
                     appliquerFiltreHorizontal(aImage);
                     calculCostTableHorizontal(aEnergyImageHorizontal,aLargeurImage,aHauteurImage);
                     calculSeamHorizontal();
@@ -74,7 +78,7 @@ public class SeamCarving{
                     vCompteurPourcentage+=1;
                     aImage = creerImage(resizeGrille(aGrille,vResizeVertical,vResizeHorizontal));
                 }
-                if((aLargeurImage>aNewLargeurImage)&&(vCompteurWhile%aOptimisation==0)){
+                if((aLargeurImage > aNewLargeurImage)&&(vCompteurWhile%aOptimisation==0)){
                     appliquerFiltreVertical(aImage);
                     calculCostTableVertical(aEnergyImageVertical,aLargeurImage,aHauteurImage);
                     calculSeamVertical();
@@ -84,7 +88,7 @@ public class SeamCarving{
                     aImage = creerImage(resizeGrille(aGrille,vResizeVertical,vResizeHorizontal));
                 }
             }else if(aLargeurPlusGrand){
-                if(aLargeurImage>aNewLargeurImage){
+                if(aLargeurImage > aNewLargeurImage){
                     appliquerFiltreVertical(aImage);
                     calculCostTableVertical(aEnergyImageVertical,aLargeurImage,aHauteurImage);
                     calculSeamVertical();
@@ -93,7 +97,7 @@ public class SeamCarving{
                     vCompteurPourcentage+=1;
                     aImage = creerImage(resizeGrille(aGrille,vResizeVertical,vResizeHorizontal));
                 }
-                if((aHauteurImage>aNewHauteurImage)&&(vCompteurWhile%aOptimisation==0)){
+                if((aHauteurImage > aNewHauteurImage)&&(vCompteurWhile%aOptimisation==0)){
                     appliquerFiltreHorizontal(aImage);
                     calculCostTableHorizontal(aEnergyImageHorizontal,aLargeurImage,aHauteurImage);
                     calculSeamHorizontal();
@@ -108,7 +112,10 @@ public class SeamCarving{
             printTab(null , aCostTableHorizontal[aHauteurImage-1]);
             System.out.println("\nCostTableHorizontal derniere ligne :");
             printTab(null , aCostTableHorizontal[aHauteurImage]);*/
-
+            /*System.out.println("\nCostTableVertical :");
+            printTab(aCostTableVertical , null);
+            System.out.println("\nCostTableHorizontal :");
+            printTab(aCostTableHorizontal , null);*/
             System.out.println("Largeur actuelle : " + aLargeurImage + "px");
             System.out.println("Hauteur actuelle : " + aHauteurImage + "px");
             //System.out.println("vResizeVertical: "+vResizeVertical+" vResizeHorizontal: "+vResizeHorizontal);
@@ -117,6 +124,11 @@ public class SeamCarving{
             }
             System.out.println("");
             //vCompteurWhile+=1;
+            /*aNomImage = "energie_verticale.png";
+            creerFichier(aEnergyImageVertical);
+            aNomImage = "energie_horizontale.png";
+            creerFichier(aEnergyImageHorizontal);
+            aNomImage = "chaton1.png";*/
         }
         System.out.println(" => Pourcentage avancement : 100%\n => Terminé !");
         creerFichier(creerImage(aGrille));
@@ -158,8 +170,11 @@ public class SeamCarving{
                     }
                     if( indiceV == -1 && vPixelAfficheV==true) {
                         vGrille[i][j] = pGrille[i][j];
+                        //System.out.print("PIXEL - vertical |");
                     }
                     else {
+                        //System.out.println("PIXEL ROUGE - vertical ["+i+","+j+"]");
+                        //vGrille[i][j] = -1;
                         vGrille[i][j] = pGrille[i][j+1];
                         /*try{
                             vGrille[i][j] = pGrille[i][j+1];
@@ -190,12 +205,10 @@ public class SeamCarving{
                         vGrille[i][j] = pGrille[i][j];
                     }
                     else {
+                        //System.out.println("PIXEL ROUGE - horizontal");
+                        //vGrille[i][j] = -10485760;
                         vGrille[i][j] = pGrille[i+1][j];
                     }
-                    /*else {
-                        //System.out.println("PIXEL ROUGE");
-                        vGrille[i][j] = -10485760;
-                    }*/
                 }
                 vPixelAfficheH=true;
             }
@@ -247,10 +260,11 @@ public class SeamCarving{
     //###CALCUL VERTICAL##//
     public static void calculCostTableVertical(BufferedImage pImage, int pLargeurImage, int pHauteurImage){
         aCostTableVertical = new int[pHauteurImage][pLargeurImage];
-        aGrille = getColorTab(aImage);
+        aEnergyGrille = getColorTab(pImage);
+        noEmptyLines(aEnergyGrille);
 
         for (int i=0; i<pLargeurImage ; i++){
-            aCostTableVertical[0][i]=aGrille[0][i];
+            aCostTableVertical[0][i]=aEnergyGrille[0][i];
         }
 
         int Mno=0;
@@ -260,20 +274,20 @@ public class SeamCarving{
         for (int l=1 ; l<pHauteurImage ; l++){
             for (int c=0 ; c<pLargeurImage ; c++){
 
-                Mn=aCostTableVertical[l-1][c]+n(l-1,c,aGrille);
+                Mn=aCostTableVertical[l-1][c]+n(l-1,c,aEnergyGrille);
 
                 if(c+1>=pLargeurImage) {
                     Mno = aInfini;
                 }
                 else {
-                    Mno=aCostTableVertical[l-1][c+1]+no(l-1,c+1,aGrille);
+                    Mno=aCostTableVertical[l-1][c+1]+no(l-1,c+1,aEnergyGrille);
                 }
 
                 if(c-1 < 0) {
                     Mne = aInfini;
                 }
                 else {
-                    Mne=aCostTableVertical[l-1][c-1]+ne(l-1,c-1,aGrille);
+                    Mne=aCostTableVertical[l-1][c-1]+ne(l-1,c-1,aEnergyGrille);
                 }
 
                 aCostTableVertical[l][c]= (int)Math.min(Mn, (int)Math.min(Mno,Mne));
@@ -285,11 +299,11 @@ public class SeamCarving{
         aVerticalSeamTab = new int[aHauteurImage][2];
         plusFaibleCoutVertical();
         seamFinderVertical(aYmaxVertical,aXmaxVertical,-1);
-        System.out.println("SEAM VERTICAL :");
+        /*System.out.println("SEAM VERTICAL :");
         for (int i=0;i<aHauteurImage;i++){
             System.out.print("["+aVerticalSeamTab[i][0]+","+aVerticalSeamTab[i][1]+"]");
         }
-        System.out.println("");
+        System.out.println("");*/
     }
 
     static void seamFinderVertical(int pL, int pC, int pCompteur){
@@ -300,13 +314,13 @@ public class SeamCarving{
         int Mne=aInfini;
 
         if((pL-1>=0)){
-            Mn=aCostTableVertical[pL-1][pC]+n(pL-1,pC,aGrille);
+            Mn=aCostTableVertical[pL-1][pC]+n(pL-1,pC,aEnergyGrille);
         }
         if((pL-1>=0) && (pC-1>=0)){
-            Mne=aCostTableVertical[pL-1][pC-1]+ne(pL-1,pC-1,aGrille);
+            Mne=aCostTableVertical[pL-1][pC-1]+ne(pL-1,pC-1,aEnergyGrille);
         }
         if((pL-1>=0) && (pC+1<aLargeurImage)){
-            Mno=aCostTableVertical[pL-1][pC+1]+no(pL-1,pC+1,aGrille);
+            Mno=aCostTableVertical[pL-1][pC+1]+no(pL-1,pC+1,aEnergyGrille);
         }
 
         if(aCostTableVertical[pL][pC] == Mn){
@@ -332,10 +346,11 @@ public class SeamCarving{
     //###CALCUL HORIZONTAL###
     public static void calculCostTableHorizontal(BufferedImage pImage, int pLargeurImage, int pHauteurImage){
         aCostTableHorizontal = new int[pHauteurImage][pLargeurImage];
-        aGrille = getColorTab(aImage);
+        aEnergyGrille = getColorTab(pImage);
+        noEmptyLines(aEnergyGrille);
 
         for (int i=0; i<pHauteurImage ; i++){
-            aCostTableHorizontal[i][0]=aGrille[i][0];
+            aCostTableHorizontal[i][0]=aEnergyGrille[i][0];
         }
 
         int Mne=0;
@@ -348,21 +363,21 @@ public class SeamCarving{
                 if (c-1<0){
                     Me=aInfini;
                 }else{
-                    Me=aCostTableHorizontal[l][c-1]+e(l,c-1,aGrille);
+                    Me=aCostTableHorizontal[l][c-1]+e(l,c-1,aEnergyGrille);
                 }
 
                 if((l+1 >= pHauteurImage)||(c-1<0)) {
                     Mse = aInfini;
                 }
                 else {
-                    Mse=aCostTableHorizontal[l+1][c-1]+se(l+1,c-1,aGrille);
+                    Mse=aCostTableHorizontal[l+1][c-1]+se(l+1,c-1,aEnergyGrille);
                 }
 
                 if((l-1 < 0)||(c-1<0)) {   // (Avant chagement): if((c-1 < 0)||(l-1<0)) {
                     Mne = aInfini;
                 }
                 else {
-                    Mne=aCostTableHorizontal[l-1][c-1]+ne(l-1,c-1,aGrille);
+                    Mne=aCostTableHorizontal[l-1][c-1]+ne(l-1,c-1,aEnergyGrille);
                 }
 
                 aCostTableHorizontal[l][c]= Math.min(Me, Math.min(Mse,Mne));
@@ -373,12 +388,12 @@ public class SeamCarving{
     static void calculSeamHorizontal(){
         aHorizontalSeamTab = new int[aLargeurImage][2];
         plusFaibleCoutHorizontal();
-        System.out.println("\nSEAM HORIZONTAL :");
         seamFinderHorizontal(aYmaxHorizontal,aXmaxHorizontal,-1);
+        /*System.out.println("\nSEAM HORIZONTAL :");
         for (int i=0;i<aLargeurImage;i++){
             System.out.print("["+aHorizontalSeamTab[i][0]+","+aHorizontalSeamTab[i][1]+"]");
         }
-        System.out.println("");
+        System.out.println("");*/
        // printTab(aCostTableHorizontal);
     }
 
@@ -390,13 +405,13 @@ public class SeamCarving{
         int Mne=aInfini;
 
         if((pC-1>=0)){  // || (pL-1<0)
-            Me=aCostTableHorizontal[pL][pC-1]+e(pL,pC-1,aGrille);
+            Me=aCostTableHorizontal[pL][pC-1]+e(pL,pC-1,aEnergyGrille);
         }
         if((pL-1>=0) && (pC-1>=0)){
-            Mne=aCostTableHorizontal[pL-1][pC-1]+ne(pL-1,pC-1,aGrille);
+            Mne=aCostTableHorizontal[pL-1][pC-1]+ne(pL-1,pC-1,aEnergyGrille);
         }
         if((pL+1<aHauteurImage) && (pC-1>=0)){
-            Mse=aCostTableHorizontal[pL+1][pC-1]+se(pL+1,pC-1,aGrille);
+            Mse=aCostTableHorizontal[pL+1][pC-1]+se(pL+1,pC-1,aEnergyGrille);
         }
 
         if(aCostTableHorizontal[pL][pC] == Me){
@@ -408,9 +423,9 @@ public class SeamCarving{
         else if (aCostTableHorizontal[pL][pC]==Mse){
             seamFinderHorizontal(pL+1,pC-1,pCompteur);
         }
-        System.out.print("pL:"+pL + "," + " pC:"+pC);
+        /*System.out.print("pL:"+pL + "," + " pC:"+pC);
         System.out.println(" => "+aCostTableHorizontal[pL][pC] + " , Me:"+Me + " , Mne:"+Mne + " , Mse:"+Mse);
-        /*if(pL==0 && pC==997) {
+        if(pL==0 && pC==997) {
             System.out.println(" => "+aCostTableHorizontal[pL][pC] + " , Me:"+Me + " , Mne:"+Mne + " , Mse:"+Mse);
         }else {
             System.out.println("");
@@ -427,7 +442,7 @@ public class SeamCarving{
                 aYmaxHorizontal=i;
             }
         }
-        System.out.println(aCostTableHorizontal[aYmaxHorizontal][aXmaxHorizontal]);
+        //System.out.println(aCostTableHorizontal[aYmaxHorizontal][aXmaxHorizontal]);
     }
 
      //###GESTION DES IMAGES / FICHIERS ###//
@@ -518,9 +533,22 @@ public class SeamCarving{
         }
     }
 
+    public static void noEmptyLines(int[][] pGrille) {
+        for(int l=1 ; l<pGrille.length-2 ; l++) {
+            pGrille[l][0] = pGrille[l][1];
+            pGrille[l][pGrille[0].length-1] = pGrille[l][pGrille[0].length-2];
+        }
+        for(int c=0 ; c<pGrille[0].length ; c++) {
+            pGrille[0][c] = pGrille[1][c];
+            pGrille[pGrille.length-2][c] = pGrille[pGrille.length-3][c];
+            pGrille[pGrille.length-1][c] = pGrille[pGrille.length-3][c];
+        }
+    }
+
     public static void appliquerFiltreVertical(BufferedImage pImage) {
         /* Définition de la convolution du filtre vertical */
 
+        //Vertical : 
         Kernel kernel = new Kernel(3, 3, new float[]{1f, 0f, -1f, 2f, 0f, -2f, 1f, 0f, -1f});
         ConvolveOp convolution = new ConvolveOp(kernel);
         aEnergyImageVertical = convolution.filter(pImage, null);
@@ -530,6 +558,7 @@ public class SeamCarving{
     public static void appliquerFiltreHorizontal(BufferedImage pImage) {
         /* Définition de la convolution du filtre horizontal */
 
+        //Horizontal : 
         Kernel kernel = new Kernel(3, 3, new float[]{1f, 2f, 1f, 0f, 0f, 0f, -1f, -2f, -1f});
         ConvolveOp convolution = new ConvolveOp(kernel);
         aEnergyImageHorizontal = convolution.filter(pImage, null);
