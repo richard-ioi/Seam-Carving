@@ -22,11 +22,12 @@ public class SeamCarving{
     //###ATTRIBUTS###//
     public static final int aInfini = Integer.MAX_VALUE; // Constante l'infini qui nous sert plus tard, pour que la coccinelle ne sorte pas de la grille
     public static BufferedImage aImage = null;
+    public static BufferedImage aOriginalImage = null;
     public static BufferedImage aEnergyImageVertical = null;
     public static BufferedImage aEnergyImageHorizontal = null;
     public static BufferedImage aResizedImage = null;
-    public static float aPourcentageHorizontal;
-    public static float aPourcentageVertical;
+    public static int aPourcentageHorizontal;
+    public static int aPourcentageVertical;
     public static String aNomImage;
     public static int aLargeurImage;
     public static int aHauteurImage;
@@ -47,15 +48,16 @@ public class SeamCarving{
     public static boolean aHauteurPlusGrand = false;
     public static boolean aLargeurPlusGrand = false;
     public static float aPourcentageAvancement = 0;
+    public static int aNbSeams;
+    public static int[][][] aAllSeams;
+    public static int aCompteurPourcentage=0;
 
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
         int vCompteurWhile=0;
-        int vCompteurPourcentage=0;
         boolean vResizeVertical;
         boolean vResizeHorizontal;
         Initialisation(args[0],Integer.parseInt(args[1]),Integer.parseInt(args[2]));
-        int vNbSeams=(aLargeurImage-aNewLargeurImage)+(aHauteurImage-aNewHauteurImage);
         System.out.println("\nNouvelle hauteur = "+aNewHauteurImage+"px, nouvelle largeur = "+aNewLargeurImage+"px\n");
         
         //aNewLargeurImage = aLargeurImage+1;
@@ -64,7 +66,7 @@ public class SeamCarving{
         //aGrille = new int[aHauteurImage][aLargeurImage];
         
         while( (aLargeurImage > aNewLargeurImage) || (aHauteurImage > aNewHauteurImage) ) {
-            aPourcentageAvancement = (vCompteurPourcentage*100)/vNbSeams;
+            aPourcentageAvancement = (aCompteurPourcentage*100)/aNbSeams;
             vResizeVertical=false;
             vResizeHorizontal=false;
             aGrille = getColorTab(aImage);
@@ -75,7 +77,7 @@ public class SeamCarving{
                     calculSeamHorizontal();
                     aHauteurImage-=1;
                     vResizeHorizontal=true;
-                    vCompteurPourcentage+=1;
+                    aCompteurPourcentage+=1;
                     aImage = creerImage(resizeGrille(aGrille,vResizeVertical,vResizeHorizontal));
                 }
                 if((aLargeurImage > aNewLargeurImage)&&(vCompteurWhile%aOptimisation==0)){
@@ -84,7 +86,7 @@ public class SeamCarving{
                     calculSeamVertical();
                     aLargeurImage-=1;
                     vResizeVertical=true;
-                    vCompteurPourcentage+=1;
+                    aCompteurPourcentage+=1;
                     aImage = creerImage(resizeGrille(aGrille,vResizeVertical,vResizeHorizontal));
                 }
             }else if(aLargeurPlusGrand){
@@ -94,7 +96,7 @@ public class SeamCarving{
                     calculSeamVertical();
                     aLargeurImage-=1;
                     vResizeVertical=true;
-                    vCompteurPourcentage+=1;
+                    aCompteurPourcentage+=1;
                     aImage = creerImage(resizeGrille(aGrille,vResizeVertical,vResizeHorizontal));
                 }
                 if((aHauteurImage > aNewHauteurImage)&&(vCompteurWhile%aOptimisation==0)){
@@ -103,7 +105,7 @@ public class SeamCarving{
                     calculSeamHorizontal();
                     aHauteurImage-=1;
                     vResizeHorizontal=true;
-                    vCompteurPourcentage+=1;
+                    aCompteurPourcentage+=1;
                     aImage = creerImage(resizeGrille(aGrille,vResizeVertical,vResizeHorizontal));
                 }
             }
@@ -123,7 +125,7 @@ public class SeamCarving{
                 System.out.println(" => Pourcentage avancement :"+ aPourcentageAvancement+"%");
             }
             System.out.println("");
-            //vCompteurWhile+=1;
+            vCompteurWhile+=1;
             /*aNomImage = "energie_verticale.png";
             creerFichier(aEnergyImageVertical);
             aNomImage = "energie_horizontale.png";
@@ -131,10 +133,45 @@ public class SeamCarving{
             aNomImage = "chaton1.png";*/
         }
         System.out.println(" => Pourcentage avancement : 100%\n => Terminé !");
-        creerFichier(creerImage(aGrille));
+        creerFichier(creerImage(aGrille),"r");
+        System.out.println();
+        System.out.println("Traçage des seams en cours...");
+        traceSeam();
+        System.out.println("Traçage des seams terminé !");
     }
 
     //###ALGORITHMES DES IMAGES / TABLEAUX###//
+
+    public static void traceSeam(){
+        int vCompteur=0;
+        float vPourcentageAvancement = (vCompteur*100)/aNbSeams;
+        int vLargeurImage=aOriginalImage.getWidth();
+        int vHauteurImage=aOriginalImage.getHeight();
+        int[][] vGrilleOriginale = getColorTab(aOriginalImage);
+        int[][] vGrille = new int[vGrilleOriginale.length][vGrilleOriginale[0].length];
+        for(int i=0;i<aAllSeams.length;i++){
+            vCompteur+=1;
+            vPourcentageAvancement = (vCompteur*100)/aNbSeams;
+            for(int j=0;j<aAllSeams[i].length;j++){
+                for(int x=0;x<vLargeurImage;x++){
+                    for(int y=0;y<vHauteurImage;y++){
+                        if((x==aAllSeams[i][j][1])&&(y==aAllSeams[i][j][0])){
+                            vGrille[y][x] = -10485760;
+                        }
+                        else if(vGrille[y][x]!=-10485760){
+                            vGrille[y][x]=vGrilleOriginale[y][x];
+                        }
+                    }
+                }
+                if((aAllSeams[i][j][0]==0)&&(aAllSeams[i][j][1]==0)&&(aAllSeams[i][j+1][0]==0)&&(aAllSeams[i][j+1][1]==0)){
+                    j=aAllSeams[i].length;
+                    System.out.println("FIN DU SEAM");
+                }
+            }
+            System.out.println("Traçage des Seams "+vPourcentageAvancement+"%");
+        }
+        creerFichier(creerImage(vGrille),"s"); 
+    }
 
     public static int[][] resizeGrille(int[][] pGrille, boolean pResizeVertical, boolean pResizeHorizontal) {
         boolean vPixelAfficheV = true;
@@ -299,6 +336,7 @@ public class SeamCarving{
         aVerticalSeamTab = new int[aHauteurImage][2];
         plusFaibleCoutVertical();
         seamFinderVertical(aYmaxVertical,aXmaxVertical,-1);
+        aAllSeams[aCompteurPourcentage]=aVerticalSeamTab;
         /*System.out.println("SEAM VERTICAL :");
         for (int i=0;i<aHauteurImage;i++){
             System.out.print("["+aVerticalSeamTab[i][0]+","+aVerticalSeamTab[i][1]+"]");
@@ -333,7 +371,6 @@ public class SeamCarving{
             seamFinderVertical(pL-1,pC+1,pCompteur);
         }
         aVerticalSeamTab[pCompteur] = new int[] {pL,pC};
-
     }
 
     static void plusFaibleCoutVertical(){
@@ -389,6 +426,7 @@ public class SeamCarving{
         aHorizontalSeamTab = new int[aLargeurImage][2];
         plusFaibleCoutHorizontal();
         seamFinderHorizontal(aYmaxHorizontal,aXmaxHorizontal,-1);
+        aAllSeams[aCompteurPourcentage]=aHorizontalSeamTab;
         /*System.out.println("\nSEAM HORIZONTAL :");
         for (int i=0;i<aLargeurImage;i++){
             System.out.print("["+aHorizontalSeamTab[i][0]+","+aHorizontalSeamTab[i][1]+"]");
@@ -431,7 +469,6 @@ public class SeamCarving{
             System.out.println("");
         }*/
         aHorizontalSeamTab[pCompteur] = new int[] {pL,pC};
-
     }
 
     static void plusFaibleCoutHorizontal(){
@@ -447,21 +484,28 @@ public class SeamCarving{
 
      //###GESTION DES IMAGES / FICHIERS ###//
 
-     public static void Initialisation (final String pNom, final int pPourcentageVertical, final int pPourcentageHorizontal){
+     public static void Initialisation (final String pNom, final int pPourcentageHorizontal, final int pPourcentageVertical){
         try{
             aNomImage=pNom;
             aPourcentageHorizontal = pPourcentageHorizontal;
             aPourcentageVertical = pPourcentageVertical;
             chargerImage("images/"+aNomImage);
-            aNewHauteurImage = (int)(aHauteurImage-(aHauteurImage*(aPourcentageVertical)/100));
-            aNewLargeurImage = (int)(aLargeurImage-(aLargeurImage*(aPourcentageHorizontal)/100));
-            System.out.println("L'image doit être réduite de "+aPourcentageVertical+"% en hauteur et "+aPourcentageHorizontal+"% en largeur");
+            aOriginalImage=aImage;
+            aNewHauteurImage = (int)(aHauteurImage-(aHauteurImage*(aPourcentageHorizontal)/100));
+            aNewLargeurImage = (int)(aLargeurImage-(aLargeurImage*(aPourcentageVertical)/100));
+            System.out.println("L'image doit être réduite de "+aPourcentageHorizontal+"% en hauteur et "+aPourcentageVertical+"% en largeur");
             if((aHauteurImage-aNewHauteurImage)>(aLargeurImage-aNewLargeurImage)){
                 aHauteurPlusGrand = true;
                 aOptimisation = (int)((aHauteurImage-aNewHauteurImage)/(aLargeurImage-aNewLargeurImage));
             } else if ((aHauteurImage-aNewHauteurImage)<=(aLargeurImage-aNewLargeurImage)){
                 aLargeurPlusGrand = true;
                 aOptimisation = (int)((aLargeurImage-aNewLargeurImage)/(aHauteurImage-aNewHauteurImage));
+            }
+            aNbSeams=(aLargeurImage-aNewLargeurImage)+(aHauteurImage-aNewHauteurImage);
+            if(aLargeurPlusGrand){
+                aAllSeams=new int[aNbSeams][aLargeurImage][2];
+            }else{
+                aAllSeams=new int[aNbSeams][aHauteurImage][2];
             }
         }
         catch (Exception e){
@@ -496,9 +540,21 @@ public class SeamCarving{
         return vResizedImage;
     }
 
-    public static void creerFichier(BufferedImage pImage){
+    public static void creerFichier(BufferedImage pImage,String pOption){
         try{
-            ImageIO.write(pImage, "PNG", new File("resized_images/resized_"+aNomImage));
+            String vNomFichier="";
+            String vExtension="";
+            for(int i=0;i<aNomImage.length()-4;i++){
+                vNomFichier+=aNomImage.charAt(i);
+            }
+            for(int j=aNomImage.length()-4;j<aNomImage.length();j++){
+                vExtension+=aNomImage.charAt(j);
+            }
+            if(pOption=="r"){ 
+                ImageIO.write(pImage, "PNG", new File("resized_images/resized_"+vNomFichier+"_"+aPourcentageHorizontal+"_"+aPourcentageVertical+vExtension));
+            }else if(pOption=="s"){
+                ImageIO.write(pImage, "PNG", new File("resized_images/seamed_"+vNomFichier+"_"+aPourcentageHorizontal+"_"+aPourcentageVertical+vExtension));
+            }
         }
         catch (IOException e){
         }
