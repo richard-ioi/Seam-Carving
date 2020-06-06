@@ -51,6 +51,8 @@ public class SeamCarving{
     public static int aNbSeams;
     public static int[][][] aAllSeams;
     public static int aCompteurPourcentage=0;
+    public static String aNomResizedFinal;
+    public static String aNomSeamedFinal;
 
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
@@ -135,9 +137,11 @@ public class SeamCarving{
         System.out.println(" => Pourcentage avancement : 100%\n => Terminé !");
         creerFichier(creerImage(aGrille),"r");
         System.out.println();
-        System.out.println("Traçage des seams en cours...");
+        System.out.println("Fichier redimensionné : "+aNomResizedFinal);
         traceSeam();
-        System.out.println("Traçage des seams terminé !");
+        System.out.println("Fichier comportant les seams : "+aNomSeamedFinal);
+        System.out.println();
+
     }
 
     //###ALGORITHMES DES IMAGES / TABLEAUX###//
@@ -521,10 +525,12 @@ public class SeamCarving{
             for(int j=aNomImage.length()-4;j<aNomImage.length();j++){
                 vExtension+=aNomImage.charAt(j);
             }
+            aNomResizedFinal="resized_"+vNomFichier+"_"+aPourcentageHorizontal+"_"+aPourcentageVertical+vExtension;
+            aNomSeamedFinal="seamed_"+vNomFichier+"_"+aPourcentageHorizontal+"_"+aPourcentageVertical+vExtension;
             if(pOption=="r"){ 
-                ImageIO.write(pImage, "PNG", new File("resized_images/resized_"+vNomFichier+"_"+aPourcentageHorizontal+"_"+aPourcentageVertical+vExtension));
+                ImageIO.write(pImage, "PNG", new File("resized_images/"+aNomResizedFinal));
             }else if(pOption=="s"){
-                ImageIO.write(pImage, "PNG", new File("resized_images/seamed_"+vNomFichier+"_"+aPourcentageHorizontal+"_"+aPourcentageVertical+vExtension));
+                ImageIO.write(pImage, "PNG", new File("resized_images/"+aNomSeamedFinal));
             }
         }
         catch (IOException e){
