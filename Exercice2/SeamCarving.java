@@ -26,33 +26,33 @@ public class SeamCarving{
     public static BufferedImage aEnergyImageVertical = null;
     public static BufferedImage aEnergyImageHorizontal = null;
     public static BufferedImage aResizedImage = null;
+    public static String aNomImage;
+    public static String aNomResizedFinal;
+    public static String aNomSeamedFinal;
+    public static boolean aHauteurPlusGrand = false;
+    public static boolean aLargeurPlusGrand = false;
+    public static float aPourcentageAvancement = 0;
     public static int aPourcentageHorizontal;
     public static int aPourcentageVertical;
-    public static String aNomImage;
     public static int aLargeurImage;
     public static int aHauteurImage;
     public static int aNewLargeurImage;
     public static int aNewHauteurImage;
-    public static int[][] aGrille;
-    public static int[][] aEnergyGrille;
-    public static int[][] aCostTableVertical;
-    public static int[][] aCostTableHorizontal;
     public static int aXmaxVertical;
     public static int aYmaxVertical;
     public static int aXmaxHorizontal;
     public static int aYmaxHorizontal;
     public static int aPlusFaibleCoutVertical;
+    public static int aOptimisation;
+    public static int aNbSeams;
+    public static int aCompteurPourcentage=0;
+    public static int[][] aGrille;
+    public static int[][] aEnergyGrille;
+    public static int[][] aCostTableVertical;
+    public static int[][] aCostTableHorizontal;
     public static int[][] aVerticalSeamTab;
     public static int[][] aHorizontalSeamTab;
-    public static int aOptimisation;
-    public static boolean aHauteurPlusGrand = false;
-    public static boolean aLargeurPlusGrand = false;
-    public static float aPourcentageAvancement = 0;
-    public static int aNbSeams;
     public static int[][][] aAllSeams;
-    public static int aCompteurPourcentage=0;
-    public static String aNomResizedFinal;
-    public static String aNomSeamedFinal;
 
     //###FONCTION PRINCIPALE###//
     public static void main(String[] args){
@@ -215,13 +215,13 @@ public class SeamCarving{
 
     static void plusFaibleCoutVertical(){
         aXmaxVertical=0;
-         aYmaxVertical=aHauteurImage-1;
-         for (int i=0;i<=aLargeurImage-1;i++){
-             if(aCostTableVertical[aYmaxVertical][i]<aCostTableVertical[aYmaxVertical][aXmaxVertical]){
-                 aXmaxVertical=i;
-             }
-         }
-     } 
+        aYmaxVertical=aHauteurImage-1;
+        for (int i=0;i<=aLargeurImage-1;i++){
+            if(aCostTableVertical[aYmaxVertical][i]<aCostTableVertical[aYmaxVertical][aXmaxVertical]){
+                aXmaxVertical=i;
+            }
+        }
+    } 
 
     public static void calculCostTableVertical(BufferedImage pImage, int pLargeurImage, int pHauteurImage){
         aCostTableVertical = new int[pHauteurImage][pLargeurImage];
