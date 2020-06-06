@@ -143,34 +143,13 @@ public class SeamCarving{
     //###ALGORITHMES DES IMAGES / TABLEAUX###//
 
     public static void traceSeam(){
-        int vCompteur=0;
-        float vPourcentageAvancement = (vCompteur*100)/aNbSeams;
-        int vLargeurImage=aOriginalImage.getWidth();
-        int vHauteurImage=aOriginalImage.getHeight();
         int[][] vGrilleOriginale = getColorTab(aOriginalImage);
-        int[][] vGrille = new int[vGrilleOriginale.length][vGrilleOriginale[0].length];
         for(int i=0;i<aAllSeams.length;i++){
-            vCompteur+=1;
-            vPourcentageAvancement = (vCompteur*100)/aNbSeams;
             for(int j=0;j<aAllSeams[i].length;j++){
-                for(int x=0;x<vLargeurImage;x++){
-                    for(int y=0;y<vHauteurImage;y++){
-                        if((x==aAllSeams[i][j][1])&&(y==aAllSeams[i][j][0])){
-                            vGrille[y][x] = -10485760;
-                        }
-                        else if(vGrille[y][x]!=-10485760){
-                            vGrille[y][x]=vGrilleOriginale[y][x];
-                        }
-                    }
-                }
-                /*if((aAllSeams[i][j][0]==0)&&(aAllSeams[i][j][1]==0)&&(aAllSeams[i][j+1][0]==0)&&(aAllSeams[i][j+1][1]==0)){
-                    j=aAllSeams[i].length;
-                    System.out.println("FIN DU SEAM");
-                }*/
+                vGrilleOriginale[aAllSeams[i][j][0]][aAllSeams[i][j][1]]=-10485760;
             }
-            System.out.println("Traçage des Seams "+vPourcentageAvancement+"%");
         }
-        creerFichier(creerImage(vGrille),"s"); 
+        creerFichier(creerImage(vGrilleOriginale),"s"); 
     }
 
     public static int[][] resizeGrille(int[][] pGrille, boolean pResizeVertical, boolean pResizeHorizontal) {
