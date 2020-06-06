@@ -163,10 +163,10 @@ public class SeamCarving{
                         }
                     }
                 }
-                if((aAllSeams[i][j][0]==0)&&(aAllSeams[i][j][1]==0)&&(aAllSeams[i][j+1][0]==0)&&(aAllSeams[i][j+1][1]==0)){
+                /*if((aAllSeams[i][j][0]==0)&&(aAllSeams[i][j][1]==0)&&(aAllSeams[i][j+1][0]==0)&&(aAllSeams[i][j+1][1]==0)){
                     j=aAllSeams[i].length;
                     System.out.println("FIN DU SEAM");
-                }
+                }*/
             }
             System.out.println("Traçage des Seams "+vPourcentageAvancement+"%");
         }
@@ -337,11 +337,6 @@ public class SeamCarving{
         plusFaibleCoutVertical();
         seamFinderVertical(aYmaxVertical,aXmaxVertical,-1);
         aAllSeams[aCompteurPourcentage]=aVerticalSeamTab;
-        /*System.out.println("SEAM VERTICAL :");
-        for (int i=0;i<aHauteurImage;i++){
-            System.out.print("["+aVerticalSeamTab[i][0]+","+aVerticalSeamTab[i][1]+"]");
-        }
-        System.out.println("");*/
     }
 
     static void seamFinderVertical(int pL, int pC, int pCompteur){
@@ -374,10 +369,13 @@ public class SeamCarving{
     }
 
     static void plusFaibleCoutVertical(){
-        int valeurMinV = IntStream.of(aCostTableVertical[aCostTableVertical.length-1]).min().getAsInt();
-        int[] vMax = new int[] {aCostTableVertical.length-1 , Arrays.asList(aCostTableVertical[aCostTableVertical.length-1]).indexOf(valeurMinV)};
-        aYmaxVertical = vMax[0];
-        aXmaxVertical = vMax[1]+1;
+       aXmaxVertical=0;
+        aYmaxVertical=aHauteurImage-1;
+        for (int i=0;i<=aLargeurImage-1;i++){
+            if(aCostTableVertical[aYmaxVertical][i]<aCostTableVertical[aYmaxVertical][aXmaxVertical]){
+                aXmaxVertical=i;
+            }
+        }
     }
 
     //###CALCUL HORIZONTAL###
@@ -427,12 +425,6 @@ public class SeamCarving{
         plusFaibleCoutHorizontal();
         seamFinderHorizontal(aYmaxHorizontal,aXmaxHorizontal,-1);
         aAllSeams[aCompteurPourcentage]=aHorizontalSeamTab;
-        /*System.out.println("\nSEAM HORIZONTAL :");
-        for (int i=0;i<aLargeurImage;i++){
-            System.out.print("["+aHorizontalSeamTab[i][0]+","+aHorizontalSeamTab[i][1]+"]");
-        }
-        System.out.println("");*/
-       // printTab(aCostTableHorizontal);
     }
 
     static void seamFinderHorizontal(int pL, int pC, int pCompteur){
