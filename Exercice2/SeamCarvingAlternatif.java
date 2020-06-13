@@ -487,42 +487,48 @@ public class SeamCarvingAlternatif{
 
     public static int[][] resizeGrille(final int[][] pGrille, final boolean pResizeVertical, final boolean pResizeHorizontal) {
         int[][] vGrille = new int[pGrille.length][pGrille[0].length];
-            boolean vPixelAfficheV = true;
-            boolean vPixelAfficheH = true;
-            if(pResizeVertical && pResizeHorizontal) {
-                vGrille = new int[pGrille.length-1][pGrille[0].length-1];
-            }else if(pResizeVertical) {
-                vGrille = new int[pGrille.length][pGrille[0].length-1];
-            }else if(pResizeHorizontal) {
-                vGrille = new int[pGrille.length-1][pGrille[0].length];
-            }
-            int indiceV = -1;
-            int indiceH = -1;
-            if(pResizeVertical) {
-                for (int i=0 ; i<vGrille.length ; i++){
-                    for (int j=0 ; j<vGrille[0].length ; j++){
-                        if(aAllSeamsVerticaux.contains(i+" "+j) && vPixelAfficheV==true) {
-                            vGrille[i][j] = pGrille[i][j+1];
-                        }else{
-                            vGrille[i][j] = pGrille[i][j];
-                        }
+        //boolean vPixelAfficheV = true;
+        //boolean vPixelAfficheH = true;
+        int vPixelsVides = 0;
+        if(pResizeVertical && pResizeHorizontal) {
+            vGrille = new int[pGrille.length-1][pGrille[0].length-1];
+        }else if(pResizeVertical) {
+            vGrille = new int[pGrille.length][pGrille[0].length-1];
+        }else if(pResizeHorizontal) {
+            vGrille = new int[pGrille.length-1][pGrille[0].length];
+        }
+        if(pResizeVertical) {
+            for (int i=0 ; i<vGrille.length ; i++) {
+                for (int j=0 ; j<vGrille[0].length ; j++) {
+                    if(aAllSeamsVerticaux.contains(i+" "+j)) {
+                        //vPixelAfficheV=false;
+                        vPixelsVides += 1;
+                        break;
                     }
-                    vPixelAfficheV=true;
+                    else if(vPixelsVides==0) {//vPixelAfficheV == true) {
+                        vGrille[i][j] = pGrille[i][j];
+                    }
+                    else {
+                        vGrille[i][j] = pGrille[i][j+vPixelsVides];
+                    }
                 }
+                //vPixelAfficheV=true;
+                vPixelsVides = 0;
             }
+        }
 
-            if(pResizeHorizontal) {
-                for (int j=0 ; j<vGrille[0].length ; j++){
-                    for (int i=0 ; i<vGrille.length ;i++){
-                        if(aAllSeamsHorizontaux.contains(i+" "+j) && vPixelAfficheH==true) {
-                            vGrille[i][j] = pGrille[i][j+1];
-                        }else{
-                            vGrille[i][j] = pGrille[i][j];
-                        }
+        if(pResizeHorizontal) {
+            for (int j=0 ; j<vGrille[0].length ; j++){
+                for (int i=0 ; i<vGrille.length ;i++){
+                    if(aAllSeamsHorizontaux.contains(i+" "+j) && vPixelAfficheH==true) {
+                        vGrille[i][j] = pGrille[i][j+1];
+                    }else{
+                        vGrille[i][j] = pGrille[i][j];
                     }
-                    vPixelAfficheH=true;
                 }
+                vPixelAfficheH=true;
             }
+        }
         return vGrille;
     }
 
