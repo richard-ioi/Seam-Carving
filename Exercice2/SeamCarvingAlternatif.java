@@ -50,6 +50,8 @@ public class SeamCarvingAlternatif{
     public static int[][] aEnergyGrille;
     public static int[][] aCostTableVertical;
     public static int[][] aCostTableHorizontal;
+    public static int[][] aCostTableVertical2;
+    public static int[][] aCostTableHorizontal2;
     public static int[][] aVerticalSeamTab;
     public static int[][] aHorizontalSeamTab;
     public static int[][][] aAllSeams;
@@ -222,18 +224,19 @@ public class SeamCarvingAlternatif{
 
     static void plusFaibleCoutVertical(){
         boolean vExiste=false;
-        aXmaxVertical=52;
+        aXmaxVertical=0;
         aYmaxVertical=aHauteurImage-1;
         for (int i=0;i<=aLargeurImage-1;i++){
-            if(aCostTableVertical[aYmaxVertical][i]<aCostTableVertical[aYmaxVertical][aXmaxVertical]){
-                // TIENS JAI TROUVE XMAX
+            if(aCostTableVertical2[aYmaxVertical][i]<aCostTableVertical2[aYmaxVertical][aXmaxVertical]){
                 for(int j=0;j<aXmaxVerticalTab.length;j++){
-                    if(aXmaxVerticalTab[j]==0){
-                        break;
-                    }
                     if(i==aXmaxVerticalTab[j]){
                         vExiste=true;
                         break;
+                    }
+                    if(j-1 >= 0) {
+                        if(aXmaxVerticalTab[j-1]==0 && aXmaxVerticalTab[j]==0) {
+                            break;
+                        }
                     }
                 }
                 if(vExiste==false){
@@ -241,12 +244,14 @@ public class SeamCarvingAlternatif{
                 }
             }
         }
-        System.out.println(aCostTableVertical[aYmaxVertical][aXmaxVertical]);
+        System.out.println(aCostTableVertical2[aYmaxVertical][aXmaxVertical]);
+        aCostTableVertical2[aYmaxVertical][aXmaxVertical] = aInfini;
         aXmaxVerticalTab[aImage.getWidth()-aLargeurImage]=aXmaxVertical;
-    } 
+    }
 
     public static void calculCostTableVertical(BufferedImage pImage, int pLargeurImage, int pHauteurImage){
         aCostTableVertical = new int[pHauteurImage][pLargeurImage];
+        aCostTableVertical2 = new int[pHauteurImage][pLargeurImage];
         aEnergyGrille = getColorTab(pImage);
         noEmptyLines(aEnergyGrille);
 
@@ -277,6 +282,7 @@ public class SeamCarvingAlternatif{
                 }
 
                 aCostTableVertical[l][c]= (int)Math.min(Mn, (int)Math.min(Mno,Mne));
+                aCostTableVertical2[l][c] = aCostTableVertical[l][c];
             }
         }
     }
@@ -321,6 +327,7 @@ public class SeamCarvingAlternatif{
 
     public static void calculCostTableHorizontal(BufferedImage pImage, int pLargeurImage, int pHauteurImage){
         aCostTableHorizontal = new int[pHauteurImage][pLargeurImage];
+        aCostTableHorizontal2 = new int[pHauteurImage][pLargeurImage];
         aEnergyGrille = getColorTab(pImage);
         noEmptyLines(aEnergyGrille);
 
@@ -355,6 +362,7 @@ public class SeamCarvingAlternatif{
                 }
 
                 aCostTableHorizontal[l][c]= Math.min(Me, Math.min(Mse,Mne));
+                aCostTableHorizontal2[l][c] = aCostTableHorizontal[l][c];
             }
         }
     }
