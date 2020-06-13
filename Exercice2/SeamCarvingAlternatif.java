@@ -85,8 +85,8 @@ public class SeamCarvingAlternatif{
         Map sortedDerniereLigne = new TreeMap(aDerniereLigne);
         while( (aLargeurImage > aNewLargeurImage)){//|| (aHauteurImage > aNewHauteurImage) ) {
             aPourcentageAvancement = (aCompteurPourcentage*100)/aNbSeams;
-            vResizeVertical=false;
-            vResizeHorizontal=false;
+            vResizeVertical=true;
+            vResizeHorizontal=true;
             /*if(aHauteurImage > aNewHauteurImage){
                 calculSeamHorizontal();
                 aHauteurImage-=1;
