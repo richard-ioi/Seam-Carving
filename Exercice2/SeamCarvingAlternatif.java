@@ -486,17 +486,17 @@ public class SeamCarvingAlternatif{
     // ---- RESTRUCTURATION DE L'IMAGE A PARTIR DES DONNEES DES SEAMS ---- //
 
     public static int[][] resizeGrille(final int[][] pGrille, final boolean pResizeVertical, final boolean pResizeHorizontal) {
-        int[][] vGrille = new int[pGrille.length][pGrille[0].length];
+        int[][] vGrille = new int[pGrille.length-(aHauteurImage-aNewHauteurImage)][pGrille[0].length-(aLargeurImage-aNewLargeurImage)];
         //boolean vPixelAfficheV = true;
-        //boolean vPixelAfficheH = true;
+        boolean vPixelAfficheH = true;
         int vPixelsVides = 0;
-        if(pResizeVertical && pResizeHorizontal) {
+        /*if(pResizeVertical && pResizeHorizontal) {
             vGrille = new int[pGrille.length-1][pGrille[0].length-1];
         }else if(pResizeVertical) {
             vGrille = new int[pGrille.length][pGrille[0].length-1];
         }else if(pResizeHorizontal) {
             vGrille = new int[pGrille.length-1][pGrille[0].length];
-        }
+        }*/
         if(pResizeVertical) {
             for (int i=0 ; i<vGrille.length ; i++) {
                 for (int j=0 ; j<vGrille[0].length ; j++) {
