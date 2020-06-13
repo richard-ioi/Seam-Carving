@@ -164,6 +164,7 @@ Le programme utilise différentes fonctions dans le but :
                 }
 
                 M[l][c]= (int)Math.max(Mno, (int)Math.max(Mn,Mne));
+                
             }
         }
     }
