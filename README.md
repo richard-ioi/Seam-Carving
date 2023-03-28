@@ -1,4 +1,4 @@
-*Travail réalisé dans le cadre d'un projet étudiant en seconde année du cycle préparatoire intégré (EE) à ESIEE Paris*
+*Travail réalisé dans le cadre d'un projet étudiant en seconde année du cycle préparatoire intégré (E2) à ESIEE Paris*
 # Seam-Carving
 
 ## User guide
@@ -127,4 +127,80 @@ Nord-Ouest).*
 
 Si l’une des trois égalités est vérifiée, on en déduit quelle est la case précédente (L-1, C), (L-1, C-1) ou (L-1, C+1). La fonction est récursive et teste de nouveau la même chose avec la case précédente trouvée et ainsi de suite jusqu’à arriver à la ligne L=0. Notre chemin de plus faible coût a été établi, c’est notre seam ! Chaque coordonnées de cases trouvées ont été stockées dans un tableau aVerticalSeamTab qui correspond donc à notre seam.
 
+#### Seam horizontal 
 
+Un Seam horizontal est une suite de pixels de plus faible valeur déterminée à partir de **aEnergyImageHorizontale** qui parcourt la grille de gauche à droite. Ainsi, en retirant un seam horizontal, cela nous permet de réduire la taille de l’image en hauteur.
+
+Le principe pour retrouver un seam horizontal reprend les mêmes bases que le seam vertical, sauf que cette fois-ci, on veut que le programme parcourt l’image en horizontal, d’une case de la colonne C = 0 jusqu’à une case de la colonne C = **aLargeurImage** en essayant d’emprunter le chemin de plus faible coût possible. Nous voulons que notre programme parcourt la grille horizontalement, donc ses déplacements possibles sont “Est”, “Nord-Est” et “Sud-Est” (E, NE, SE).
+
+On dispose de fonctions int **e**(int L, int C), **ne** (int L, int C), **se**(int L, int C) : coûts d’un déplacement depuis la case (L, C) dans une grille à **aHauteurImage** lignes et **aLargeurImage** colonnes, correspondant respectivement aux déplacements Est, Nord-Est et Sud-Est.
+
+- Le programme étant sur la case (L, C-1), le déplacement Est le conduit en case (L, C) avec un coût **e**(L, C-1).
+- Étant sur la case (L-1,C-1), le déplacement Nord-Est le conduit en case (L, C) avec un coût **ne**(L-1,C-1).
+- Étant sur la case (L+1, C-1), le déplacement Sud-Est le conduit en case (L, C) avec un coût **se**(L+1, C-1).
+
+Afin que le programme ne sorte pas de la grille, les mouvements Est, Nord-Est et Sud-Est depuis une case située en colonne C >= **aLargeurImage** sont de coût infini. De même pour le mouvement Nord-Est depuis une case située en ligne L >= **aHauteurImage** et pour le mouvement Sud-Est depuis une case située en ligne L<0. 
+
+On note **m(l, c)**, le coût minimum d’un chemin allant d’une case à la ligne C = 0 jusqu’à la case (l, c).
+
+Comme pour le seam vertical, nous avons créé un tableau **aCostTableHorizontal** son but est de regrouper toutes les valeurs **m(l, c)** à partir de **aEnergyImageHorizontal**. Nous avons en effet besoin de tableaux de coûts différents pour les seams horizontaux et verticaux étant donné que les coûts varient en fonction du sens duquel le programme parcourt la grille. C’est la fonction **calculCostTableHorizontal** qui va déterminer ce tableau en prenant en paramètre une image, sa largeur et sa hauteur.
+
+Le coût minimum **m(L, C)** ∀L, ∀C, 0 ≤ L ≤ aHauteurImage, 0 ≤ C ≤ aLargeurImage peut correspondre soit à :
+
+- m(L, C-1) + **e**(L, C-1)
+- m(L-1, C-1) + **ne**(L-1, C-1)
+- m(L+1, C-1) + **se**(L+1, C-1)
+
+Maintenant, à l’aide du tableau **aCostTableHorizontal**, on peut déterminer le chemin de plus faible coût possible d’une case de la colonne C=0 jusqu’à une case de la colonne C = **aLargeurImage**. Nous faisons intervenir la fonction **seamFinderHorizontal** qui fonctionne exactement comme **seamFinderVertical**, sauf que cette fois-ci, pour la lancer nous devons trouver deux attributs **aYmaxHorizontal** et **aXmaxHorizontal** qui correspondent aux coordonnées de la case de plus faible valeur sur la colonne C = **aLargeurImage**: c’est la fonction **plusFaibleCoutHorizontal** qui s’en charge.
+
+Nous pouvons ainsi lancer **seamFinderHorizontal** en mettant en paramètres L=**aYmaxHorizontal**, C=**aXmaxHorizontal**. Désormais, à partir de cette case, la fonction va directement tester si, la valeur de la case (L, C) actuelle correspond soit à :
+
+- La valeur de la case **m**(L, C-1)+**e**(L, C-1)
+*(ce qui voudrait dire que pour accéder à la case actuelle (L, C), elle a dû prendre la direction Est).*
+- La valeur de la case **m**(L-1, C-1)+**ne**(L-1, C-1)
+*(ce qui voudrait dire que pour accéder à la case actuelle (L, C), elle a dû prendre la direction Nord-Est).*
+- La valeur de la case **m**(L+1, C-1)+**se**(L+1, C-1).
+*(ce qui voudrait dire que pour accéder à la case actuelle (L, C), elle a dû prendre la direction Sud-Est).*
+
+La fonction re-teste chaque case jusqu’à arriver à la colonne C = 0. Chaque coordonnées de cases trouvées ont été stockées dans un tableau **aHorizontalSeamTab** qui correspond donc à notre seam.
+
+## Redimensionnement de l'image
+
+Nous venons de voir la logique de la détermination d’un seam de l’image. Désormais, ils nous faut pouvoir retirer ces pixels de l’image pour la redimensionner.
+
+En premier lieu, on calcule la nouvelle hauteur (**aNewHauteurImage**) et la nouvelle largeur (**aNewLargeurImage**) à partir du pourcentage de réduction entré dans la ligne de commande.
+
+Ensuite, nous utilisons le seam correspondant au redimensionnement actuel (en largeur => vertical ou en hauteur => horizontal). Ce dernier contenant les coordonnées des pixels à retirer de l’image, nous avons choisi d’utiliser la méthode suivante :
+
+- On crée une nouvelle grille de taille **aLargeurImage**-1 ou **aHauteurImage**-1, on commence par remplir normalement cette dernière en faisant correspondre les pixels de l’image.
+
+- Cependant, en parcourant la grille, pour chaque pixel, si les coordonnées du pixel actuel se trouvent aussi dans le seam que l’on utilise alors nous n’ajoutons pas ce pixel à la grille.
+
+- Enfin, pour éviter que le seam apparaisse sur l’image comme un chemin de pixels noir, tous les pixels suivant un pixel non-ajouté sur la même ligne (pour une redimensionnement vertical) ou sur la même colonne (pour l’horizontal) sont décalés à gauche ou en haut respectivement.
+
+Maintenant, au lieu que notre programme détermine tous les seams d’un coup et les retire de l’image en une seule fois, nous avons préféré une approche beaucoup plus optimale, bien que plus longue. En effet, le retrait d’un seam provoque un changement notable dans l’image, ainsi la valeur de l’énergie des pixels peut varier. Ainsi, après le retrait d’un seam, nous répétons toute l’opération (analyse de l’image, application d’un filtre, nouvelle **costTable**, détermination d’un nouveau seam…) pour prendre en compte le changement potentiel des valeurs d’énergie des pixels.
+
+Pour aller plus loin dans l’optimisation, nous devons savoir s’il y a plus de seams verticaux ou horizontaux pour savoir à quelle fréquence les calculer. En effet, s’il y a 40 seams verticaux et 20 seams horizontaux à retirer et que le programme les traite logiquement, sans différence, il va commencer par retirer un à un les 20 premiers seams verticaux, les 20 seams horizontaux et continuera à retirer 20 derniers seams verticaux pour arriver à 40. Or, le retrait de ces 20 derniers seams verticaux a pu considérablement changer la valeur de l’énergie des pixels et peut avoir un impact considérable sur le redimensionnement horizontal.
+
+Pour y remédier, nous voulons que le programme retire des seams horizontaux tout au long de la procédure, pour avoir un redimensionnement le plus juste possible. Il va s’adapter : pour 2 seams verticaux retirés, un seam vertical est retiré. Cela nous donne une itération de la sorte (dans le cas où il y a plus de seams verticaux) :
+
+➢ Seam vertical retiré ✓ - Seam horizontal retiré ✓
+➢ Seam vertical retiré ✓
+➢ Seam vertical retiré ✓ - Seam Horizontal retiré ✓
+➢ Seam vertical retiré ✓
+
+Nous avons préféré utiliser cet exemple (40 seams verticaux vs 20 seams horizontaux) car il est plus simple à présenter. Bien entendu, le programme saura s’adapter pour tous les nombres possibles, même si le nombre de seams ne sont pas multiples entre eux.
+
+Il s’avère que toute ce processus de ré-analyser l’image à chaque itération s’avère plutôt long car nous devons créer une image à chaque fois. Pour y remédier, nous pourrions nous attarder sur la fonction **convolution.filter** (qui créée le filtre) qui nécessite obligatoirement une image en paramètre et la redéfinir pour qu’elle prenne en paramètre une grille.
+
+## Exemples d'exécutions
+
+Voici plusieurs exemple d’application de notre Seam Carving sur différentes images.
+
+- La première image du tableau (plage.png) a été redimensionnée de **10% en hauteur** et **20% en largeur**.
+- La deuxième (tour.png) est redimensionnée de **20% en largeur** et de **10% sur la hauteur.**
+- Enfin, la troisième image (rocher.png) a été redimensionnée proportionnellement sur la **largeur et la hauteur** à savoir de **25%**.
+
+![composants selection](./image5.png)
+
+**(Vous pourrez remarquer que les seams ne prennent pas forcément toute la largeur our toute la longueur car en effet, on créée un seam à chaque fois que l'image est réduite, il se termine donc à la largeur/longueur de son itération).
