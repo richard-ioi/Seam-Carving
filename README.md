@@ -184,10 +184,10 @@ Pour aller plus loin dans l’optimisation, nous devons savoir s’il y a plus d
 
 Pour y remédier, nous voulons que le programme retire des seams horizontaux tout au long de la procédure, pour avoir un redimensionnement le plus juste possible. Il va s’adapter : pour 2 seams verticaux retirés, un seam vertical est retiré. Cela nous donne une itération de la sorte (dans le cas où il y a plus de seams verticaux) :
 
-➢ Seam vertical retiré ✓ - Seam horizontal retiré ✓
-➢ Seam vertical retiré ✓
-➢ Seam vertical retiré ✓ - Seam Horizontal retiré ✓
-➢ Seam vertical retiré ✓
+- ➢ Seam vertical retiré ✓ - Seam horizontal retiré ✓
+- ➢ Seam vertical retiré ✓
+- ➢ Seam vertical retiré ✓ - Seam Horizontal retiré ✓
+- ➢ Seam vertical retiré ✓
 
 Nous avons préféré utiliser cet exemple (40 seams verticaux vs 20 seams horizontaux) car il est plus simple à présenter. Bien entendu, le programme saura s’adapter pour tous les nombres possibles, même si le nombre de seams ne sont pas multiples entre eux.
 
